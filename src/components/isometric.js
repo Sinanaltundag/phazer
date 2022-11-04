@@ -43,7 +43,7 @@ import { GridEngine } from 'grid-engine';
       }
     }
 
-  const game = {
+  const config = {
     width: 800,
     height: 600,
     type: Phaser.AUTO,
@@ -131,12 +131,15 @@ import { GridEngine } from 'grid-engine';
 
 
 
-  const [level, setLevel] = useState(game)
+  const [game, setGame] = useState(config)
   const gameRef = useRef(null)
   // Call `setInitialize` when you want to initialize your game! :)
   const [initialize, setInitialize] = useState(false)
   const destroy = () => {
     if (gameRef.current) {
+      // game.plugins.scene.destroy('GridEngine')
+      // gameRef.current.plugins.removeScenePlugin('GridEngine')
+      console.log(gameRef.current.game.plugins.scene)
       gameRef.current.destroy()
     }
     setInitialize(false)
@@ -144,10 +147,10 @@ import { GridEngine } from 'grid-engine';
   return (
     <>
     
-      <IonPhaser game={level}  ref={gameRef} initialize={initialize}/>
+      <IonPhaser game={game}  ref={gameRef} initialize={initialize}/>
       <button onClick={() => setSpeed(speed + 1)}>Speed Up</button>
       <button onClick={() => setSpeed(speed - 1)}>Speed Down</button>
-      <button onClick={() => setLevel(game)}>Change Level Back</button>
+      <button onClick={() => setGame(config)}>Change Level Back</button>
       <button onClick={() => setInitialize(true)}>Initialize</button>
       <button onClick={destroy}>Destroy</button>
     </>

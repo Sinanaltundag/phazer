@@ -6628,6 +6628,11 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==
 
+phaser-react-tools@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/phaser-react-tools/-/phaser-react-tools-1.0.4.tgz#84514c65436a426978196f6e8d69314268297560"
+  integrity sha512-Oam6AZuJaAU94sNg5tsiukAJpD0HPIu0AY2dEln2/nO8VvUYRlrI4mR8FLbfA5sdxCOSCUDuFyOkDwZWPHjU4w==
+
 phaser@^3.55.2:
   version "3.55.2"
   resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.55.2.tgz#c1e2e9e70de7085502885e06f46b7eb4bd95e29a"
