@@ -57,6 +57,14 @@ export default function App() {
         }
         const playerSprite = this.add.sprite(0, 0, "player");
         playerSprite.scale = 3;
+        // const text = this.add.text(0, 0, "Player 1");
+        // text.setColor("#000000");
+        // text.setShadow(1, 1, "#ffffff", 2);
+        // text.setFontSize(20);
+        // text.setOrigin(0.5, 0.5);
+        // text.setDepth(100);
+
+        // const container = this.add.container(10, 10, [playerSprite, text]);
         this.cameras.main.startFollow(playerSprite, true);
         this.cameras.main.setFollowOffset(
           -playerSprite.width,
@@ -65,7 +73,17 @@ export default function App() {
 
          this.game.events.on("myEvent", function (data) {
            console.log(data);
+           
           });
+
+          const text = this.add.text(-20, -10, followingText);
+          text.setColor("#000000");
+          text.setShadow(1, 1, "#ffffff", 2);
+          text.setFontSize(20);
+          const container = this.add.container(0, 0, [playerSprite, text]);
+          container.setDepth(100);
+          container.setSize(32, 32);
+          this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
           
         createPlayerAnimation.call(this, "up-right", 26, 29);
         createPlayerAnimation.call(this, "down-right", 36, 39);
@@ -76,6 +94,7 @@ export default function App() {
           characters: [
             {
               id: "player",
+              container,
               sprite: playerSprite,
               startPosition: { x: 0, y: 0 },
               offsetY: -9,
@@ -122,6 +141,9 @@ export default function App() {
             _this.gridEngine.move("player", "up-right");
           }
          });
+         this.game.events.on("myEvent3", function (data) {
+          followingText = data;        
+         });
       },
     },
     plugins: {
@@ -138,7 +160,7 @@ export default function App() {
   const [currentGame, setCurrentGame] = useState(null);
   const [game, setGame] = useState(config);
   const gameRef = useRef(null);
-
+  let followingText = "Player 1";
   const game1 = () => {
     gameRef.current?.getInstance().then((instance) => {
       setCurrentGame(instance);
@@ -168,7 +190,10 @@ export default function App() {
       <button onClick={() => setInitialize(true)}>Initialize</button>
       <button onClick={destroy}>Destroy</button>
       <button onClick={() => currentGame?.events.emit("myEvent", "hello everybody")}>
-        say hello
+        say hello console
+      </button>
+      <button onClick={() => currentGame?.events.emit("myEvent3", "hello everybody")}>
+        say hello upper
       </button>
       <div>
       <button onClick={() => currentGame?.events.emit("myEvent2", "up-left")} >Up Left</button>
