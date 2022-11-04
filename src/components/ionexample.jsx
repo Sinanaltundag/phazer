@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { IonPhaser } from "@ion-phaser/react";
 import Phaser from "phaser";
 import { GridEngine } from "grid-engine";
-// import { gameConfig } from "./gameConfig";
 
-// import './App.css'
 
 class MainScene extends Phaser.Scene {
   preload() {
@@ -121,40 +119,10 @@ class MainScene extends Phaser.Scene {
   }
 }
 
-// let gameConfig = {
-//   width: 800,
-//   height: 600,
-//   type: Phaser.AUTO,
-//   // scale: {
-//   //   mode: Phaser.Scale.FIT,
-//   //   autoCenter: Phaser.Scale.CENTER_BOTH,
-//   //   width: 800,
-//   //   height: 600,
-//   // },
-
-//   scene: MainScene,
-//   plugins: {
-//     scene: [
-//       {
-//         key: "GridEngine",
-//         plugin: GridEngine,
-//         mapping: "gridEngine",
-//       },
-//     ],
-//   },
-// };
-
- const gameConfig = {
-    width: 800,
-    height: 600,
+ var gameConfig = {
+    width: 801,
+    height: 601,
     type: Phaser.AUTO,
-    // scale: {
-    //   mode: Phaser.Scale.FIT,
-    //   autoCenter: Phaser.Scale.CENTER_BOTH,
-    //   width: 800,
-    //   height: 600,
-    // },
-  
     scene: MainScene,
     plugins: {
       scene: [
@@ -194,7 +162,7 @@ export default function IonEx() {
     },
   };
 
-  const gameConfig = {
+  const gameConfig1 = {
     width: 800,
     height: 600,
     type: Phaser.AUTO,
@@ -224,20 +192,15 @@ export default function IonEx() {
     gameRef.current
       ?.getInstance()
       .then((game) => game.plugins.removeScenePlugin("GridEngine"));
-    // gameRef.current?.shutdown();
-    // console.log(gameRef.current.game.plugins);
-    // gameRef.current.game.plugins.removeScenePlugin("GridEngine")
-    // gameRef.current?.destroy();
-    // console.log(gameConfig);
     setInitialize(false);
     // setGame(undefined);
   };
 
-  //   useEffect(() => {
-  //     if (initialize) {
-  //         setGame(gameConfig2)
-  //     }
-  // }, [initialize])
+    useEffect(() => {
+      if (initialize) {
+          setGame(gameConfig)
+      }
+  }, [initialize])
   // console.log(gameConfig);
 
   const Start = () => {
@@ -263,7 +226,6 @@ export default function IonEx() {
           </>
         ) : (
           <>
-            {/* <img src={logo} className="App-logo" alt="logo" /> */}
             <div onClick={() => Start()} className="flex">
               <a href="#1" className="bttn">
                 Initialize
