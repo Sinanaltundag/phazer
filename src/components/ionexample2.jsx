@@ -13,18 +13,19 @@ class MainScene extends Phaser.Scene {
       frameWidth: 15,
       frameHeight: 32,
     });
+    // this.load.plugin("GridEngine", "grid-engine/dist/GridEngine.min.js", true);
     // if (this.plugins.get("GridEngine")) {
-    //   this.plugins.installScenePlugin("GridEngine", GridEngine, "gridEngine", this);
+    //   // this.plugins.installScenePlugin("GridEngine", GridEngine, "gridEngine", this);
     //   //   // this.plugins.installScenePlugin("GridEngine", GridEngine, "gridEngine");
-    //   //   this.load.plugin(
-    //     //     "GridEngine",
-    //     //     GridEngine,
-    //     //     true
-    //     //   );
+    //     this.load.plugin(
+    //         "GridEngine",
+    //         GridEngine,
+    //         true
+    //       );
     //     }
       }
       
-      create() {
+  create() {
     const cloudCityTilemap = this.make.tilemap({ key: "iso-map" });
     cloudCityTilemap.addTilesetImage("iso-tileset", "tiles");
     for (let i = 0; i < cloudCityTilemap.layers.length; i++) {
@@ -63,8 +64,8 @@ class MainScene extends Phaser.Scene {
       this.sys.game.plugins.removeScenePlugin("GridEngine");
       // this.game.plugins.remove(GridEngine);
       document.addEventListener("mousedown", function newgame() {
-        // this.scene.start("gridEngine", gridEngineConfig);
-         this.game = new Phaser.Game(gameConfig);
+      //   // this.scene.start("gridEngine", gridEngineConfig);
+      //    this.game = new Phaser.Game(gameConfig);
         document.removeEventListener("mousedown", newgame);
       });
     });
@@ -129,13 +130,6 @@ const gameConfig = {
   width: 800,
   height: 600,
   type: Phaser.AUTO,
-  // scale: {
-  //   mode: Phaser.Scale.FIT,
-  //   autoCenter: Phaser.Scale.CENTER_BOTH,
-  //   width: 800,
-  //   height: 600,
-  // },
-
   scene: MainScene,
   plugins: {
     scene: [
@@ -150,60 +144,43 @@ const gameConfig = {
 
 
 export default function IonEx() {
-  const gameConfig2 = {
-    width: 200,
-    height: 200,
+
+  const gameConfig = {
+    width: 800,
+    height: 600,
     type: Phaser.AUTO,
-    scene: {
-      init: function () {
-        this.cameras.main.setBackgroundColor("#24252A");
-      },
-      create: function () {
-        this.helloWorld = this.add.text(
-          this.cameras.main.centerX,
-          this.cameras.main.centerY,
-          "Hello World",
-          {
-            font: "1rem Arial",
-            fill: "#ffffff",
-          }
-        );
-        this.helloWorld.setOrigin(0.5);
-      },
-      update: function () {
-        this.helloWorld.angle += 1;
-      },
+    scene: MainScene,
+    plugins: {
+      scene: [
+        {
+          key: "GridEngine",
+          plugin: GridEngine,
+          mapping: "gridEngine",
+        },
+      ],
     },
   };
-
-
-
   const gameRef = useRef();
   const [game, setGame] = useState();
   const [initialize, setInitialize] = useState(false);
 
   const destroy = () => {
-    console.log(gameRef.current);
-    gameRef.current?.game.plugins.scene.splice(0, 1);
+    // gameRef.current?.game.plugins.scene.splice(0, 1);
     gameRef.current?.destroy();
-    // console.log(gameConfig);
     setInitialize(false);
-    // setGame(null)
+    setGame(undefined)
   };
 
-  //   useEffect(() => {
-  //     if (initialize) {
-  //         setGame(gameConfig2)
-  //     }
-  // }, [initialize])
+    useEffect(function call()  {
+      if (initialize) {
+          setGame(gameConfig)
+      }
+
+  }, [initialize])
   // console.log(gameConfig);
 
   const Start = () => {
-    setGame(gameConfig);
-    setInitialize(true);
-  };
-  const StartOther = () => {
-    setGame(gameConfig2);
+    // setGame(gameConfig);
     setInitialize(true);
   };
 
@@ -212,7 +189,7 @@ export default function IonEx() {
       <header className="App-header">
         {initialize ? (
           <>
-            <IonPhaser ref={gameRef} game={game} initialize={initialize} />
+            <IonPhaser ref={gameRef} game={game} initialize={initialize} onMouseDown={destroy}/>
             <div onClick={destroy} className="flex destroyButton">
               <a href="#1" className="bttn">
                 Destroy
@@ -221,13 +198,11 @@ export default function IonEx() {
           </>
         ) : (
           <>
-            {/* <img src={logo} className="App-logo" alt="logo" /> */}
             <div onClick={() => Start()} className="flex">
               <a href="#1" className="bttn">
                 Initialize
               </a>
             </div>
-            <button onClick={() => StartOther()}>Start Other</button>
           </>
         )}
       </header>

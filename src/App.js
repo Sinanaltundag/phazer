@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import IonEx from './components/ionexample';
+import IonEx2 from './components/ionexample2';
 // import PhaserSimple from './components/PhaserSimple';
 // import Isometric from './components/isometric';
 // import IsometricClass from './components/IsometricClass';
@@ -14,7 +15,8 @@ function App() {
       {/* <Isometric/> */}
       {/* {start?<IonEx/>:<Simple />}
       <button onClick={()=>setStart(!start)}>Start</button> */}
-      <IonEx/>
+      {/* <IonEx/> */}
+      <IonEx2/>
       {/* <PhaserSimple/> */}
     </div>
   );
