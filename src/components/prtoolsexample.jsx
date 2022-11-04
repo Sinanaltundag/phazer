@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { IonPhaser } from "@ion-phaser/react";
 import Phaser from "phaser";
+import { IonPhaser } from "@ion-phaser/react";
 import { GridEngine } from "grid-engine";
-// import { gameConfig } from "./gameConfig";
-
+import { GameComponent, useEventListener, useEventEmitter } from 'phaser-react-tools'
 // import './App.css'
 
 class MainScene extends Phaser.Scene {
@@ -14,9 +13,18 @@ class MainScene extends Phaser.Scene {
       frameWidth: 15,
       frameHeight: 32,
     });
-  }
-
-  create() {
+    // if (!this.plugins.get("GridEngine")) {
+    //   // this.plugins.installScenePlugin("GridEngine", GridEngine, "gridEngine", this);
+    //   //   this.plugins.installScenePlugin("GridEngine", GridEngine, "gridEngine");
+    //     this.load.plugin(
+    //         "GridEngine",
+    //         GridEngine,
+    //         true
+    //       );
+    //     }
+      }
+      
+      create() {
     const cloudCityTilemap = this.make.tilemap({ key: "iso-map" });
     cloudCityTilemap.addTilesetImage("iso-tileset", "tiles");
     for (let i = 0; i < cloudCityTilemap.layers.length; i++) {
@@ -50,17 +58,13 @@ class MainScene extends Phaser.Scene {
     };
     console.log(this);
 
-    this.game.events.on("MY_CUSTOM_EVENT", (event) => {
-      console.log(event);
-    });
-
     this.input.on("pointerdown", () => {
       this.sys.game.destroy(true);
       this.sys.game.plugins.removeScenePlugin("GridEngine");
       // this.game.plugins.remove(GridEngine);
       document.addEventListener("mousedown", function newgame() {
         // this.scene.start("gridEngine", gridEngineConfig);
-        this.game = new Phaser.Game(gameConfig);
+         this.game = new Phaser.Game(gameConfig);
         document.removeEventListener("mousedown", newgame);
       });
     });
@@ -121,51 +125,29 @@ class MainScene extends Phaser.Scene {
   }
 }
 
-// let gameConfig = {
-//   width: 800,
-//   height: 600,
-//   type: Phaser.AUTO,
-//   // scale: {
-//   //   mode: Phaser.Scale.FIT,
-//   //   autoCenter: Phaser.Scale.CENTER_BOTH,
-//   //   width: 800,
-//   //   height: 600,
-//   // },
+const gameConfig = {
+  width: 800,
+  height: 600,
+  type: Phaser.AUTO,
+  // scale: {
+  //   mode: Phaser.Scale.FIT,
+  //   autoCenter: Phaser.Scale.CENTER_BOTH,
+  //   width: 800,
+  //   height: 600,
+  // },
 
-//   scene: MainScene,
-//   plugins: {
-//     scene: [
-//       {
-//         key: "GridEngine",
-//         plugin: GridEngine,
-//         mapping: "gridEngine",
-//       },
-//     ],
-//   },
-// };
+  scene: MainScene,
+  plugins: {
+    scene: [
+      {
+        key: "GridEngine",
+        plugin: GridEngine,
+        mapping: "gridEngine",
+      },
+    ],
+  },
+};
 
- const gameConfig = {
-    width: 800,
-    height: 600,
-    type: Phaser.AUTO,
-    // scale: {
-    //   mode: Phaser.Scale.FIT,
-    //   autoCenter: Phaser.Scale.CENTER_BOTH,
-    //   width: 800,
-    //   height: 600,
-    // },
-  
-    scene: MainScene,
-    plugins: {
-      scene: [
-        {
-          key: "GridEngine",
-          plugin: GridEngine,
-          mapping: "gridEngine",
-        },
-      ],
-    },
-  };
 
 export default function IonEx() {
   const gameConfig2 = {
@@ -194,43 +176,19 @@ export default function IonEx() {
     },
   };
 
-  const gameConfig = {
-    width: 800,
-    height: 600,
-    type: Phaser.AUTO,
-    scene: MainScene,
-    plugins: {
-      scene: [
-        {
-          key: "GridEngine",
-          plugin: GridEngine,
-          mapping: "gridEngine",
-        },
-      ],
-    },
-  };
+
 
   const gameRef = useRef();
   const [game, setGame] = useState(gameConfig);
   const [initialize, setInitialize] = useState(true);
 
-  // var PhaserGameInstance = gameRef.current.getInstance().then( game => phaserGameObject = game);
-
-  //  someFunctionToCallOnClick =()=>{
-  //   phaserGameObject.events.emit("MY_CUSTOM_EVENT", "hello");
-  // }
-
   const destroy = () => {
-    gameRef.current
-      ?.getInstance()
-      .then((game) => game.plugins.removeScenePlugin("GridEngine"));
-    // gameRef.current?.shutdown();
-    // console.log(gameRef.current.game.plugins);
-    // gameRef.current.game.plugins.removeScenePlugin("GridEngine")
-    // gameRef.current?.destroy();
+    console.log(gameRef.current);
+    gameRef.current?.game.plugins.scene.splice(0, 1);
+    gameRef.current?.destroy();
     // console.log(gameConfig);
     setInitialize(false);
-    // setGame(undefined);
+    // setGame(null)
   };
 
   //   useEffect(() => {
@@ -248,13 +206,33 @@ export default function IonEx() {
     setGame(gameConfig2);
     setInitialize(true);
   };
-
+  const events = {
+    ON_UPDATE: 'ON_UPDATE',
+    ON_BUTTON_CLICK: 'ON_BUTTON_CLICK'
+  }
+  const [frame, setFrame] = useState(0)
+  const emit = useEventEmitter(events.ON_BUTTON_CLICK)
+  useEventListener(events.ON_UPDATE, (event) => {
+    setFrame((frame) => (frame += 1))
+  })
   return (
     <div className="App">
       <header className="App-header">
         {initialize ? (
           <>
-            <IonPhaser ref={gameRef} game={game} initialize={initialize} />
+            {/* <IonPhaser ref={gameRef} game={game} initialize={initialize} /> */}
+            <GameComponent config={gameConfig2} >
+              <div>
+              <button
+      onClick={() => {
+        emit('Button clicked!')
+      }}
+    >
+      Emit game event
+    </button>
+              </div>
+
+            </GameComponent>
             <div onClick={destroy} className="flex destroyButton">
               <a href="#1" className="bttn">
                 Destroy
