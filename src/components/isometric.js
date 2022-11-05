@@ -178,15 +178,15 @@ let upperText;
   return (
     <>
       <IonPhaser game={game} ref={gameRef} initialize={initialize} />
-      <button onClick={() => setGame(config)}>Change Level Back</button>
+      {/* <button onClick={() => setGame(config)}>Change Level Back</button> */}
       <button onClick={() => setInitialize(true)}>Initialize</button>
       <button onClick={destroy}>Destroy</button>
       <button onClick={() => currentGame?.events.emit("myEvent", "hello everybody")}>
         say hello console
       </button>
-      <button onClick={() => currentGame?.events.emit("myEvent3", "hello everybody")}>
+      {/* <button onClick={() => currentGame?.events.emit("myEvent3", "hello everybody")}>
         say hello upper
-      </button>
+      </button> */}
       <div>
       <button onClick={() => currentGame?.events.emit("myEvent2", "up-left")} >Up Left</button>
       <button onClick={() => currentGame?.events.emit("myEvent2", "up-right")} >Up Right</button>
