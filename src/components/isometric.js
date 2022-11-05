@@ -34,7 +34,7 @@ export default function App() {
         return 0;
     }
   }
-
+let upperText;
   const config = {
     width: 800,
     height: 600,
@@ -57,14 +57,7 @@ export default function App() {
         }
         const playerSprite = this.add.sprite(0, 0, "player");
         playerSprite.scale = 3;
-        // const text = this.add.text(0, 0, "Player 1");
-        // text.setColor("#000000");
-        // text.setShadow(1, 1, "#ffffff", 2);
-        // text.setFontSize(20);
-        // text.setOrigin(0.5, 0.5);
-        // text.setDepth(100);
 
-        // const container = this.add.container(10, 10, [playerSprite, text]);
         this.cameras.main.startFollow(playerSprite, true);
         this.cameras.main.setFollowOffset(
           -playerSprite.width,
@@ -75,12 +68,11 @@ export default function App() {
            console.log(data);
            
           });
-
-          const text = this.add.text(-20, -10, followingText);
-          text.setColor("#000000");
-          text.setShadow(1, 1, "#ffffff", 2);
-          text.setFontSize(20);
-          const container = this.add.container(0, 0, [playerSprite, text]);
+          upperText = this.add.text(-20, -10, "Player 1");
+          upperText.setColor("#000000");
+          upperText.setShadow(1, 1, "#ffffff", 2);
+          upperText.setFontSize(20);
+          const container = this.add.container(0, 0, [playerSprite, upperText]);
           container.setDepth(100);
           container.setSize(32, 32);
           this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
@@ -141,9 +133,10 @@ export default function App() {
             _this.gridEngine.move("player", "up-right");
           }
          });
+         upperText.text = `isMoving: ${this.gridEngine.isMoving("player")}`;
          this.game.events.on("myEvent3", function (data) {
-          followingText = data;        
-         });
+          console.log(data);
+        });
       },
     },
     plugins: {
@@ -160,7 +153,6 @@ export default function App() {
   const [currentGame, setCurrentGame] = useState(null);
   const [game, setGame] = useState(config);
   const gameRef = useRef(null);
-  let followingText = "Player 1";
   const game1 = () => {
     gameRef.current?.getInstance().then((instance) => {
       setCurrentGame(instance);
