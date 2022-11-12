@@ -3,7 +3,6 @@ import { IonPhaser } from "@ion-phaser/react";
 import Phaser from "phaser";
 import { GridEngine } from "grid-engine";
 
-
 class MainScene extends Phaser.Scene {
   preload() {
     this.load.image("tiles", "assets/iso_tile.png");
@@ -119,21 +118,21 @@ class MainScene extends Phaser.Scene {
   }
 }
 
- var gameConfig = {
-    width: 801,
-    height: 601,
-    type: Phaser.AUTO,
-    scene: MainScene,
-    plugins: {
-      scene: [
-        {
-          key: "GridEngine",
-          plugin: GridEngine,
-          mapping: "gridEngine",
-        },
-      ],
-    },
-  };
+var gameConfig = {
+  width: 801,
+  height: 601,
+  type: Phaser.AUTO,
+  scene: MainScene,
+  plugins: {
+    scene: [
+      {
+        key: "GridEngine",
+        plugin: GridEngine,
+        mapping: "gridEngine",
+      },
+    ],
+  },
+};
 
 export default function IonEx() {
   const gameConfig2 = {
@@ -196,11 +195,13 @@ export default function IonEx() {
     // setGame(undefined);
   };
 
-    useEffect(() => {
-      if (initialize) {
-          setGame(gameConfig)
-      }
-  }, [initialize])
+  console.log(gameRef?.current?.getInstance());
+
+  useEffect(() => {
+    if (initialize) {
+      setGame(gameConfig);
+    }
+  }, [initialize]);
   // console.log(gameConfig);
 
   const Start = () => {

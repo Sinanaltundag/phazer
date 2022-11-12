@@ -34,7 +34,7 @@ export default function App() {
         return 0;
     }
   }
-let upperText;
+// let upperText;
   const config = {
     width: 800,
     height: 600,
@@ -58,24 +58,32 @@ let upperText;
         const playerSprite = this.add.sprite(0, 0, "player");
         playerSprite.scale = 3;
 
-        this.cameras.main.startFollow(playerSprite, true);
-        this.cameras.main.setFollowOffset(
-          -playerSprite.width,
-          -playerSprite.height
-        );
+        // this.cameras.main.setBounds(0, 0, 800, 600);
+        // this.cameras.main.startFollow(playerSprite);
+        this.cameras.main.setZoom(0.55);
+        this.cameras.main.centerOn(70, 0);
+        // this.cameras.main.setScroll(0, 0);
+        this.cameras.main.setBackgroundColor("#ccccff");
+        // this.cameras.main.setRoundPixels(true);
+        // this.cameras.main.setDeadzone(100, 100);
+        // this.cameras.main.startFollow(playerSprite, true);
+        // this.cameras.main.setFollowOffset(
+        //   -playerSprite.width,
+        //   -playerSprite.height
+        // );
 
          this.game.events.on("myEvent", function (data) {
            console.log(data);
            
           });
-          upperText = this.add.text(-20, -10, "Player 1");
-          upperText.setColor("#000000");
-          upperText.setShadow(1, 1, "#ffffff", 2);
-          upperText.setFontSize(20);
-          const container = this.add.container(0, 0, [playerSprite, upperText]);
-          container.setDepth(100);
-          container.setSize(32, 32);
-          this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
+          // upperText = this.add.text(-20, -10, "Player 1");
+          // upperText.setColor("#000000");
+          // upperText.setShadow(1, 1, "#ffffff", 2);
+          // upperText.setFontSize(20);
+          // const container = this.add.container(0, 0, [playerSprite, upperText]);
+          // container.setDepth(100);
+          // container.setSize(32, 32);
+          // this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
           
         createPlayerAnimation.call(this, "up-right", 26, 29);
         createPlayerAnimation.call(this, "down-right", 36, 39);
@@ -86,7 +94,7 @@ let upperText;
           characters: [
             {
               id: "player",
-              container,
+              // container,
               sprite: playerSprite,
               startPosition: { x: 0, y: 0 },
               offsetY: -9,
@@ -133,7 +141,7 @@ let upperText;
             _this.gridEngine.move("player", "up-right");
           }
          });
-         upperText.text = `isMoving: ${this.gridEngine.isMoving("player")}`;
+        //  upperText.text = `isMoving: ${this.gridEngine.isMoving("player")}`;
          this.game.events.on("myEvent3", function (data) {
           console.log(data);
         });
