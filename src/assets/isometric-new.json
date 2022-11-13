@@ -24,7 +24,8 @@
           "y": 0
         }
       ],
-      "height": 10,
+      "height": 20,
+      "width": 20,
       "id": 1,
       "name": "Tile Layer 1",
       "opacity": 1,
@@ -32,7 +33,6 @@
       "starty": 0,
       "type": "tilelayer",
       "visible": true,
-      "width": 10,
       "x": 0,
       "y": 0
     }
@@ -42,23 +42,23 @@
   "orientation": "isometric",
   "renderorder": "right-down",
   "tiledversion": "1.4.3",
-  "tileheight": 16,
   "tilesets": [
     {
       "columns": 1,
       "firstgid": 1,
       "image": "iso_tile.png",
-      "imageheight": 21,
-      "imagewidth": 47,
+      "imageheight": 50,
+      "imagewidth": 80,
       "margin": 0,
       "name": "iso-tileset",
       "spacing": 0,
       "tilecount": 1,
-      "tileheight": 21,
-      "tilewidth": 47
+      "tileheight": 50,
+      "tilewidth": 80
     }
   ],
-  "tilewidth": 47,
+  "tilewidth": 80,
+  "tileheight": 50,
   "type": "map",
   "version": 1.4,
   "width": 10
