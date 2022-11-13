@@ -41,6 +41,7 @@ export default function App() {
           charLayer: "ground",
         },
       ],
+      numberOfDirections: 8,
     };
   
     this.gridEngine.create(tilemap, gridEngineConfig);
@@ -105,7 +106,7 @@ export default function App() {
     this.game.events.on("turnEvent", function (data) {
       if (data==="turn-up-left") {
         console.log("turn up");
-        _this.gridEngine.turnTowards("player", "up");
+        _this.gridEngine.turnTowards("player", "down-right");
       }});
   }
 // let upperText;

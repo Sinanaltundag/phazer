@@ -100,6 +100,7 @@ export default function App() {
               container,
             },
           ],
+          numberOfDirections: 8,
         };
         this.gridEngine.create(cloudCityTilemap, gridEngineConfig);
         this.gridEngine.movementStarted().subscribe(({ direction }) => {
@@ -156,12 +157,16 @@ export default function App() {
         this.game.events.on("turnEvent", function (data) {
           if (data==="up-left") {
             _this.gridEngine.turnTowards("player", "up-left");
+            _this.gridEngine.getSprite("player").setFrame(15);
           } else if (data==="down-right") {
             _this.gridEngine.turnTowards("player", "down-right");
+            _this.gridEngine.getSprite("player").setFrame(35);
           } else if (data==="up-right") {
             _this.gridEngine.turnTowards("player", "up-right");
+            _this.gridEngine.getSprite("player").setFrame(25);
           } else if (data==="down-left") {
             _this.gridEngine.turnTowards("player", "down-left");
+            _this.gridEngine.getSprite("player").setFrame(5);
           }});
 
         //  upperText.text = `isMoving: ${this.gridEngine.isMoving("player")}`;
