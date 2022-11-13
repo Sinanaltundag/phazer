@@ -118,6 +118,8 @@ export default function App() {
         this.gridEngine.directionChanged().subscribe(({ direction }) => {
           playerSprite.setFrame(getStopFrame(direction));
         });
+         // EXPOSE TO EXTENSION
+        window.__GRID_ENGINE__ = this.gridEngine;
       },
 
       update: function () {

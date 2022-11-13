@@ -114,6 +114,7 @@ export default function App() {
         this.gridEngine.directionChanged().subscribe(({ direction }) => {
           playerSprite.setFrame(getStopFrame(direction));
         });
+        window.__GRID_ENGINE__ = this.gridEngine;
       },
 
       update: function () {
@@ -128,7 +129,7 @@ export default function App() {
           this.gridEngine.move("player", "down-left");
         }
         const _this = this;
-        this.game.events.on("myEvent2", function (data) {
+        this.game.events.on("moveEvent", function (data) {
           if (data==="down-left") {
             _this.gridEngine.move("player", "down-left");
           } else if (data==="down-right") {
@@ -148,13 +149,19 @@ export default function App() {
         //   "player"
         // )}`;
         //* change speed function
-        this.game.events.on("setSpeed", function (data) {
+        this.game.events.on("speedEvent", function (data) {
           _this.gridEngine.setSpeed("player", data);
           });
         // * change rotation function
         this.game.events.on("turnEvent", function (data) {
-          if (data==="turn-up-left") {
+          if (data==="up-left") {
             _this.gridEngine.turnTowards("player", "up-left");
+          } else if (data==="down-right") {
+            _this.gridEngine.turnTowards("player", "down-right");
+          } else if (data==="up-right") {
+            _this.gridEngine.turnTowards("player", "up-right");
+          } else if (data==="down-left") {
+            _this.gridEngine.turnTowards("player", "down-left");
           }});
 
         //  upperText.text = `isMoving: ${this.gridEngine.isMoving("player")}`;
@@ -218,11 +225,14 @@ export default function App() {
         say hello upper
       </button> */}
       <div>
-      <button onClick={() => currentGame?.events.emit("myEvent2", "up-left")} >Up Left</button>
-      <button onClick={() => currentGame?.events.emit("myEvent2", "up-right")} >Up Right</button>
-      <button onClick={() => currentGame?.events.emit("myEvent2", "down-left")} >Down Left</button>
-      <button onClick={() => currentGame?.events.emit("myEvent2", "down-right")}>Down Right</button>
-      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-up-left")}>Turn Up-Left</button>
+      <button onClick={() => currentGame?.events.emit("moveEvent", "up-left")} >Move Up Left</button>
+      <button onClick={() => currentGame?.events.emit("moveEvent", "up-right")} >Move Up Right</button>
+      <button onClick={() => currentGame?.events.emit("moveEvent", "down-left")} >Move Down Left</button>
+      <button onClick={() => currentGame?.events.emit("moveEvent", "down-right")}>Move Down Right</button>
+      <button onClick={() => currentGame?.events.emit("turnEvent", "up-left")}>Turn Up-Left</button>
+      <button onClick={() => currentGame?.events.emit("turnEvent", "up-right")}>Turn Up-Right</button>
+      <button onClick={() => currentGame?.events.emit("turnEvent", "down-left")}>Turn Down-Left</button>
+      <button onClick={() => currentGame?.events.emit("turnEvent", "down-right")}>Turn Down-Right</button>
       <button onClick={() => currentGame?.events.emit("setSpeed", 4)}>Set Speed 2X</button>
       <button onClick={() => currentGame?.events.emit("setSpeed", 2)}>Set Speed Normal</button>
 

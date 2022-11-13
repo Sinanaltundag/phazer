@@ -89,6 +89,7 @@ export default function App() {
         createPlayerAnimation.call(this, "down-right", 36, 39);
         createPlayerAnimation.call(this, "down-left", 6, 9);
         createPlayerAnimation.call(this, "up-left", 16, 19);
+        createPlayerAnimation.call(this, "left", 16, 19);
 
         const gridEngineConfig = {
           characters: [
@@ -116,6 +117,7 @@ export default function App() {
         this.gridEngine.directionChanged().subscribe(({ direction }) => {
           playerSprite.setFrame(getStopFrame(direction));
         });
+        window.__GRID_ENGINE__ = this.gridEngine;
       },
 
       update: function () {
@@ -143,13 +145,15 @@ export default function App() {
          });
          this.game.events.on("turnEvent", function (data) {
           if (data==="turn-left") {
-            _this.gridEngine.turn("player", "left");
+            _this.gridEngine.turnTowards("player", "up-left");
+            _this.gridEngine.directionChanged("player", "up-left");
           }});
 
         //  upperText.text = `isMoving: ${this.gridEngine.isMoving("player")}`;
          this.game.events.on("myEvent3", function (data) {
           console.log(data);
         });
+        
       },
     },
     plugins: {
@@ -205,6 +209,9 @@ export default function App() {
       <button onClick={() => currentGame?.events.emit("myEvent2", "up-right")} >Up Right</button>
       <button onClick={() => currentGame?.events.emit("myEvent2", "down-left")} >Down Left</button>
       <button onClick={() => currentGame?.events.emit("myEvent2", "down-right")}>Down Right</button>
+      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-left")}>Turn Left</button>
+      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-left")}>Turn Left</button>
+      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-left")}>Turn Left</button>
       <button onClick={() => currentGame?.events.emit("turnEvent", "turn-left")}>Turn Left</button>
 
       </div>
