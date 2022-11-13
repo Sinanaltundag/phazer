@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import Phaser from "phaser";
 import { IonPhaser } from "@ion-phaser/react";
 import { GridEngine } from "grid-engine";
+import isotile from '../assets/grass_tile.png';
+import isochar from '../assets/iso_char.png';
+import isometricNewJson from '../assets/isometric-new.json';
 
 // var game = new Phaser.Game(config);
 
@@ -42,7 +45,8 @@ export default function App() {
     scene: {
       preload: function () {
         this.load.image("tiles", "assets/iso_tile.png");
-        this.load.tilemapTiledJSON("iso-map", "assets/isometric.json");
+        this.load.image("tiles", "assets/tree.png");
+        this.load.tilemapTiledJSON("iso-map", "assets/isometric-new.json");
         this.load.spritesheet("player", "assets/iso_char.png", {
           frameWidth: 15,
           frameHeight: 32,
@@ -53,54 +57,51 @@ export default function App() {
         cloudCityTilemap.addTilesetImage("iso-tileset", "tiles");
         for (let i = 0; i < cloudCityTilemap.layers.length; i++) {
           const layer = cloudCityTilemap.createLayer(i, "iso-tileset", 0, 0);
-          layer.scale = 3;
+          layer.scale = 1;
         }
-        const playerSprite = this.add.sprite(0, 0, "player");
-        playerSprite.scale = 3;
+        const playerSprite = this.add.sprite(1, 1, "player");
+        playerSprite.scale = 2;
         
-        // this.cameras.main.setBounds(0, 0, 800, 600);
-        // this.cameras.main.startFollow(playerSprite);
-        this.cameras.main.setZoom(0.55);
-        this.cameras.main.centerOn(70, 0);
-        // this.cameras.main.setScroll(0, 0);
-        this.cameras.main.setBackgroundColor("#ccccff");
-        // this.cameras.main.setRoundPixels(true);
-        // this.cameras.main.setDeadzone(100, 100);
-        // this.cameras.main.startFollow(playerSprite, true);
-        // this.cameras.main.setFollowOffset(
-        //   -playerSprite.width,
-        //   -playerSprite.height
-        // );
+        this.facingDirectionText = this.add.text(-60, -30, "direction", {
+          fontSize: "20px",
+          fill: "white",
+         });
+         console.log(this);
+        this.facingPositionText = this.add.text(-60, -10, "position", {
+          fontSize: "20px",
+          fill: "white",
+          });
+        const container = this.add.container(0, 0, [
+          playerSprite,
+          this.facingDirectionText,
+          this.facingPositionText,
+        ]);
+        this.cameras.main.startFollow(container, true);
+        // this.cameras.main.setZoom(0.55);
+        // this.cameras.main.centerOn(70, 0);
+        this.cameras.main.setBackgroundColor("white");
 
-         this.game.events.on("myEvent", function (data) {
+        this.game.events.on("myEvent", function (data) {
            console.log(data);
            
           });
-          // upperText = this.add.text(-20, -10, "Player 1");
-          // upperText.setColor("#000000");
-          // upperText.setShadow(1, 1, "#ffffff", 2);
-          // upperText.setFontSize(20);
-          // const container = this.add.container(0, 0, [playerSprite, upperText]);
-          // container.setDepth(100);
-          // container.setSize(32, 32);
-          // this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
-          
+  
         createPlayerAnimation.call(this, "up-right", 26, 29);
         createPlayerAnimation.call(this, "down-right", 36, 39);
         createPlayerAnimation.call(this, "down-left", 6, 9);
         createPlayerAnimation.call(this, "up-left", 16, 19);
-        createPlayerAnimation.call(this, "left", 16, 19);
-
+          
         const gridEngineConfig = {
           characters: [
             {
               id: "player",
               // container,
               sprite: playerSprite,
-              startPosition: { x: 0, y: 0 },
+              startPosition: { x: 2, y: 2 },
               offsetY: -9,
               walkingAnimationEnabled: false,
               speed: 2,
+              container,
             },
           ],
         };
@@ -117,6 +118,7 @@ export default function App() {
         this.gridEngine.directionChanged().subscribe(({ direction }) => {
           playerSprite.setFrame(getStopFrame(direction));
         });
+         // EXPOSE TO EXTENSION
         window.__GRID_ENGINE__ = this.gridEngine;
       },
 
@@ -143,17 +145,34 @@ export default function App() {
             _this.gridEngine.move("player", "up-right");
           }
          });
-         this.game.events.on("turnEvent", function (data) {
-          if (data==="turn-left") {
+        //  facingDirectionText.text = `facingDirection: ${this.gridEngine.getFacingDirection(
+        //   "player"
+        // )}`;
+        // console.log(this.gridEngine.getFacingDirection("player"));
+        // console.log(this.create());
+        //  this.create.facingDirectionText.text = `facingDirection: ${this.gridEngine.getFacingDirection(
+        //   "player"
+        // )}`;
+        //* change speed function
+        this.game.events.on("setSpeed", function (data) {
+          _this.gridEngine.setSpeed("player", data);
+          });
+        // * change rotation function
+        this.game.events.on("turnEvent", function (data) {
+          if (data==="turn-up-left") {
             _this.gridEngine.turnTowards("player", "up-left");
-            _this.gridEngine.directionChanged("player", "up-left");
           }});
 
         //  upperText.text = `isMoving: ${this.gridEngine.isMoving("player")}`;
          this.game.events.on("myEvent3", function (data) {
           console.log(data);
         });
-        
+        this.facingDirectionText.text = `Direction: ${this.gridEngine.getFacingDirection(
+          "player"
+        )}`;
+        this.facingPositionText.text = `Position: (${
+          this.gridEngine.getPosition("player").x
+        }, ${this.gridEngine.getPosition("player").y})`;
       },
     },
     plugins: {
@@ -209,10 +228,9 @@ export default function App() {
       <button onClick={() => currentGame?.events.emit("myEvent2", "up-right")} >Up Right</button>
       <button onClick={() => currentGame?.events.emit("myEvent2", "down-left")} >Down Left</button>
       <button onClick={() => currentGame?.events.emit("myEvent2", "down-right")}>Down Right</button>
-      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-left")}>Turn Left</button>
-      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-left")}>Turn Left</button>
-      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-left")}>Turn Left</button>
-      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-left")}>Turn Left</button>
+      <button onClick={() => currentGame?.events.emit("turnEvent", "turn-up-left")}>Turn Up-Left</button>
+      <button onClick={() => currentGame?.events.emit("setSpeed", 4)}>Set Speed 2X</button>
+      <button onClick={() => currentGame?.events.emit("setSpeed", 2)}>Set Speed Normal</button>
 
       </div>
     </>

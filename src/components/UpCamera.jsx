@@ -36,7 +36,7 @@ export default function App() {
         {
           id: "player",
           sprite: playerSprite,
-          walkingAnimationMapping: 6,
+          walkingAnimationMapping: 2,
           startPosition: { x: 5, y: 4 },
           charLayer: "ground",
         },
@@ -47,12 +47,17 @@ export default function App() {
   
     this.gridEngine.setTransition({ x: 5, y: 9 }, "ground", "bridge");
     this.gridEngine.setTransition({ x: 5, y: 10 }, "bridge", "ground");
+    window.__GRID_ENGINE__ = this.gridEngine;
   }
   
   function update() {
     const cursors = this.input.keyboard.createCursorKeys();
     if (cursors.left.isDown) {
+      if (cursors.left.getDuration() < 100) {
+        this.gridEngine.turnTowards("player", "left");
+      } else {
       this.gridEngine.move("player", "left");
+      }
     } else if (cursors.right.isDown) {
       this.gridEngine.move("player", "right");
     } else if (cursors.up.isDown) {
@@ -60,11 +65,47 @@ export default function App() {
     } else if (cursors.down.isDown) {
       this.gridEngine.move("player", "down");
     }
+    // if (this.cursors.left.isDown) {
+    //   if (this.cursors.left.getDuration() < 150) {
+    //     this.gridEngine.turnTowards("player", "left")
+    //   } else {
+    //     this.gridEngine.move("player", "left")
+    //   }
+    // } else if (this.cursors.right.isDown) {
+    //   if (this.cursors.right.getDuration() < 150) {
+    //     this.gridEngine.turnTowards("player", "right")
+    //   } else {
+    //     this.gridEngine.move("player", "right")
+    //   }
+    // } else if (this.cursors.up.isDown) {
+    //   if (this.cursors.up.getDuration() < 150) {
+    //     this.gridEngine.turnTowards("player", "up")
+    //   } else {
+    //     this.gridEngine.move("player", "up")
+    //   }
+    // } else if (this.cursors.down.isDown) {
+    //   if (this.cursors.down.getDuration() < 150) {
+    //     this.gridEngine.turnTowards("player", "down")
+    //   } else {
+    //     this.gridEngine.move("player", "down")
+    //   }
+    // }
     const _this = this;
+        this.game.events.on("myEvent2", function (data) {
+          if (data==="down-left") {
+            _this.gridEngine.move("player", "down");
+          } else if (data==="down-right") {
+            _this.gridEngine.move("player", "right");
+          } else if (data==="up-left") {
+            _this.gridEngine.move("player", "left");
+          } else if (data==="up-right") {
+            _this.gridEngine.move("player", "up");
+          }
+         });
     this.game.events.on("turnEvent", function (data) {
       if (data==="turn-up-left") {
         console.log("turn up");
-        _this.gridEngine.turnTowards("player", "turn-up");
+        _this.gridEngine.turnTowards("player", "up");
       }});
   }
 // let upperText;

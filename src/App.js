@@ -2,20 +2,24 @@ import { useState } from 'react';
 import './App.css';
 // import IonEx from './components/ionexample';
 // import PhaserSimple from './components/PhaserSimple';
-import Isometric from './components/isometric';
+// import Isometric from './components/isometric';
 // import IsometricClass from './components/IsometricClass';
 // import Simple from './components/Simple';
+// import UpCamera from './components/UpCamera';
+import PlayerFuncs from './components/PlayerFuncs';
 
 function App() {
   // const [start, setStart] = useState(false);
   return (
     <div className="App">
       {/* <IsometricClass /> */}
-      <Isometric/>
+      {/* <Isometric/> */}
       {/* {start?<IonEx/>:<Simple />}
       <button onClick={()=>setStart(!start)}>Start</button> */}
       {/* <IonEx/> */}
       {/* <PhaserSimple/> */}
+      {/* <UpCamera/> */}
+      <PlayerFuncs/>
     </div>
   );
 }
