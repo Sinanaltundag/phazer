@@ -5,9 +5,10 @@ import './App.css';
 // import Isometric from './components/isometric';
 // import IsometricClass from './components/IsometricClass';
 // import Simple from './components/Simple';
-import PlayerFuncs from './components/PlayerFuncs';
+// import PlayerFuncs from './components/PlayerFuncs';
 // import UpCamera from './components/UpCamera';
-// import NewMap from './components/NewMap';
+import NewMap from './components/NewMap';
+// import NewMapOrthogonal from './components/NewMapOrthogonal';
 
 function App() {
   // const [start, setStart] = useState(false);
@@ -19,9 +20,10 @@ function App() {
       <button onClick={()=>setStart(!start)}>Start</button> */}
       {/* <IonEx/> */}
       {/* <PhaserSimple/> */}
-      <PlayerFuncs/>
+      {/* <PlayerFuncs/> */}
       {/* <UpCamera/> */}
-      {/* <NewMap/> */}
+      <NewMap/>
+      {/* <NewMapOrthogonal/> */}
     </div>
   );
 }
