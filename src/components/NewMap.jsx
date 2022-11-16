@@ -44,17 +44,16 @@ export default function App() {
     type: Phaser.AUTO,
     scene: {
       preload: function () {
-        this.load.image("tiles", "assets/iso_tile.png");
-        this.load.image("tiles", "assets/tree.png");
-        this.load.tilemapTiledJSON("iso-map", "assets/isometric-new.json");
+        this.load.image("iso-tile", "assets/newmap/texture.png");
+        this.load.tilemapTiledJSON("iso-tileset", "assets/isometric-new.json");
         this.load.spritesheet("player", "assets/iso_char.png", {
           frameWidth: 15,
           frameHeight: 32,
         });
       },
       create: function () {
-        const cloudCityTilemap = this.make.tilemap({ key: "iso-map" });
-        cloudCityTilemap.addTilesetImage("iso-tileset", "tiles");
+        const cloudCityTilemap = this.make.tilemap({ key: "iso-tileset" });
+        cloudCityTilemap.addTilesetImage("iso-tileset", "iso-tile");
         for (let i = 0; i < cloudCityTilemap.layers.length; i++) {
           const layer = cloudCityTilemap.createLayer(i, "iso-tileset", 0, 0);
           layer.scale = 1;
@@ -97,10 +96,10 @@ export default function App() {
               id: "player",
               // container,
               sprite: playerSprite,
-              startPosition: { x: 2, y: 2 },
-              offsetY: -9,
+              startPosition: { x: 4, y: 4 },
+              offsetY: -20,
               walkingAnimationEnabled: false,
-              speed: 2,
+              speed: 4,
               container,
             },
           ],
@@ -145,6 +144,14 @@ export default function App() {
             _this.gridEngine.move("player", "up-right");
           }
          });
+         this.game.events.on("moveTo", function (data) {
+          const position = _this.gridEngine.getPosition("player")
+          console.log(position);
+          console.log(data);
+          if (data.dir==="down-left") {
+            _this.gridEngine.moveTo("player", {x:7 , y:4});
+          }
+          });
         //  facingDirectionText.text = `facingDirection: ${this.gridEngine.getFacingDirection(
         //   "player"
         // )}`;
@@ -231,6 +238,7 @@ export default function App() {
       <button onClick={() => currentGame?.events.emit("turnEvent", "turn-up-left")}>Turn Up-Left</button>
       <button onClick={() => currentGame?.events.emit("setSpeed", 4)}>Set Speed 2X</button>
       <button onClick={() => currentGame?.events.emit("setSpeed", 2)}>Set Speed Normal</button>
+      <button onClick={() => currentGame?.events.emit("moveTo", {dir:"down-left", y: 2})}>Move To Down-left</button>
 
       </div>
     </>
