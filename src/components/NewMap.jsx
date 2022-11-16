@@ -58,24 +58,26 @@ export default function App() {
           const layer = cloudCityTilemap.createLayer(i, "iso-tileset", 0, 0);
           layer.scale = 1;
         }
-        const playerSprite = this.add.sprite(1, 1, "player");
+        const playerSprite = this.add.sprite(0, 0, "player");
         playerSprite.scale = 2;
         
-        this.facingDirectionText = this.add.text(-60, -30, "direction", {
-          fontSize: "20px",
-          fill: "white",
-         });
+        // this.facingDirectionText = this.add.text(-60, -30, "direction", {
+        //   fontSize: "20px",
+        //   fill: "white",
+        //  });
          console.log(this);
-        this.facingPositionText = this.add.text(-60, -10, "position", {
+        const facingPositionText = this.add.text(-50, -30, "position", {
           fontSize: "20px",
           fill: "white",
           });
         const container = this.add.container(0, 0, [
           playerSprite,
-          this.facingDirectionText,
-          this.facingPositionText,
+          // this.facingDirectionText,
+          facingPositionText,
         ]);
         this.cameras.main.startFollow(container, true);
+        this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
+
         // this.cameras.main.setZoom(0.55);
         // this.cameras.main.centerOn(70, 0);
         this.cameras.main.setBackgroundColor("white");
@@ -94,10 +96,10 @@ export default function App() {
           characters: [
             {
               id: "player",
-              // container,
-              sprite: playerSprite,
-              startPosition: { x: 4, y: 4 },
-              offsetY: -20,
+              // sprite: playerSprite, //! this is the sprite but if container used  it will cause error
+              // offsetY: -5, //! this is the offset for the sprite but it causes a bug
+              startPosition: { x: 0, y: 0 },
+              offsetX: 50,
               walkingAnimationEnabled: false,
               speed: 4,
               container,
@@ -174,12 +176,12 @@ export default function App() {
          this.game.events.on("myEvent3", function (data) {
           console.log(data);
         });
-        this.facingDirectionText.text = `Direction: ${this.gridEngine.getFacingDirection(
-          "player"
-        )}`;
-        this.facingPositionText.text = `Position: (${
-          this.gridEngine.getPosition("player").x
-        }, ${this.gridEngine.getPosition("player").y})`;
+        // this.facingDirectionText.text = `Direction: ${this.gridEngine.getFacingDirection(
+        //   "player"
+        // )}`;
+        // this.facingPositionText.text = `Position: (${
+        //   this.gridEngine.getPosition("player").x
+        // }, ${this.gridEngine.getPosition("player").y})`;
       },
     },
     plugins: {
