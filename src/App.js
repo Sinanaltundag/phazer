@@ -7,8 +7,9 @@ import './App.css';
 // import Simple from './components/Simple';
 // import PlayerFuncs from './components/PlayerFuncs';
 // import UpCamera from './components/UpCamera';
-import NewMap from './components/NewMap';
+// import NewMap from './components/NewMap';
 // import NewMapOrthogonal from './components/NewMapOrthogonal';
+import Characters from './components/Characters';
 
 function App() {
   // const [start, setStart] = useState(false);
@@ -22,8 +23,9 @@ function App() {
       {/* <PhaserSimple/> */}
       {/* <PlayerFuncs/> */}
       {/* <UpCamera/> */}
-      <NewMap/>
+      {/* <NewMap/> */}
       {/* <NewMapOrthogonal/> */}
+      <Characters/>
     </div>
   );
 }
