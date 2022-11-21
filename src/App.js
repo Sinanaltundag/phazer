@@ -9,7 +9,8 @@ import './App.css';
 // import UpCamera from './components/UpCamera';
 // import NewMap from './components/NewMap';
 // import NewMapOrthogonal from './components/NewMapOrthogonal';
-import Characters from './components/Characters';
+// import Characters from './components/Characters';
+import Layers from './components/Layers';
 
 function App() {
   // const [start, setStart] = useState(false);
@@ -25,7 +26,8 @@ function App() {
       {/* <UpCamera/> */}
       {/* <NewMap/> */}
       {/* <NewMapOrthogonal/> */}
-      <Characters/>
+      {/* <Characters/> */}
+      <Layers/>
     </div>
   );
 }

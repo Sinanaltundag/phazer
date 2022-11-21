@@ -5,9 +5,9 @@
         {
          "data":[31, 31, 31, 31, 23, 12, 12, 12, 12, 12,
             12, 12, 12, 12, 25, 12, 12, 12, 12, 12,
-            12, 12, 12, 12, 25, 12, 12, 12, 12, 12,
             6, 8, 8, 8, 10, 8, 8, 8, 8, 41,
-            2147483689, 46, 46, 46, 10, 46, 46, 46, 46, 50,
+            7, 39, 39, 39, 10, 39, 39, 39, 39, 49,
+            40, 48, 48, 48, 10, 48, 48, 48, 48, 50,
             12, 12, 12, 12, 25, 12, 12, 12, 12, 12,
             31, 31, 31, 31, 11, 31, 31, 31, 31, 31,
             12, 12, 12, 12, 25, 12, 12, 12, 12, 12,
@@ -24,20 +24,20 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 38, 38, 38, 0, 38, 38, 0, 0, 0,
-            0, 0, 0, 38, 0, 38, 38, 0, 0, 0,
+         "data":[0, 0, 0, 0, 0, 38, 38, 38, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            36, 36, 36, 0, 0, 37, 37, 37, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            37, 37, 37, 0, 0, 36, 36, 36, 36, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":10,
          "id":2,
          "name":"trees",
-         "offsetx":-0,
+         "offsetx":-1,
          "offsety":-15,
          "opacity":1,
          "type":"tilelayer",
@@ -45,8 +45,52 @@
          "width":10,
          "x":0,
          "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 47, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 46, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "id":3,
+         "name":"objects",
+         "offsetx":0,
+         "offsety":-15,
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 54, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "id":4,
+         "name":"hidden",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":3,
+ "nextlayerid":5,
  "nextobjectid":1,
  "orientation":"isometric",
  "renderorder":"right-down",
@@ -56,8 +100,8 @@
         {
          "columns":20,
          "firstgid":1,
-         "image":"ground\/ground1.png",
-         "imageheight":258,
+         "image":"ground\/ground3.png",
+         "imageheight":196,
          "imagewidth":2000,
          "margin":0,
          "name":"iso-tileset",
@@ -150,9 +194,9 @@
                  "id":9,
                  "properties":[
                         {
-                         "name":"color",
-                         "type":"string",
-                         "value":"red"
+                         "name":"ge_collide",
+                         "type":"bool",
+                         "value":false
                         }]
                 },
             
@@ -269,9 +313,9 @@
                  "id":22,
                  "properties":[
                         {
-                         "name":"trigger",
+                         "name":"ge_collide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }]
                 }, 
                 {
@@ -478,18 +522,28 @@
                  "id":45,
                  "properties":[
                         {
+                         "name":"color",
+                         "type":"string",
+                         "value":"blue"
+                        }, 
+                        {
                          "name":"ge_collide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }]
                 }, 
                 {
                  "id":46,
                  "properties":[
                         {
+                         "name":"color",
+                         "type":"string",
+                         "value":"red"
+                        }, 
+                        {
                          "name":"ge_collide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }]
                 }, 
                 {
@@ -507,7 +561,7 @@
                         {
                          "name":"ge_collide",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }]
                 }, 
                 {
@@ -526,7 +580,7 @@
                         {
                          "name":"ge_collide",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }]
                 }, 
                 {
@@ -535,7 +589,7 @@
                         {
                          "name":"ge_collide",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }]
                 }, 
                 {
@@ -544,7 +598,7 @@
                         {
                          "name":"ge_collide",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }]
                 }, 
                 {
@@ -554,6 +608,11 @@
                          "name":"ge_collide",
                          "type":"bool",
                          "value":false
+                        }, 
+                        {
+                         "name":"trigger",
+                         "type":"bool",
+                         "value":true
                         }]
                 }, 
                 {

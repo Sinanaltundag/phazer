@@ -8,6 +8,7 @@ import { GridEngine } from "grid-engine";
 export default function App() {
   function preload() {
     this.load.image("tiles", "assets/ortogonal/roads2W.png");
+    this.load.image("drag", "assets/rock.png");
     this.load.tilemapTiledJSON(
       "road-map",
       "assets/ortogonal/ortogonal.json"
@@ -31,6 +32,14 @@ export default function App() {
     this.cameras.main.startFollow(playerSprite, true);
     this.cameras.main.setFollowOffset(-playerSprite.width, -playerSprite.height);
   
+    this.draggable = this.add.sprite(0, 0, "drag");
+    this.draggable.scale = 0.5;
+    this.draggable.setInteractive();
+    this.input.setDraggable(this.draggable);
+    this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
+      gameObject.x = dragX;
+      gameObject.y = dragY;
+    });
     const gridEngineConfig = {
       characters: [
         {
@@ -39,6 +48,7 @@ export default function App() {
           walkingAnimationMapping: 2,
           startPosition: { x: 5, y: 4 },
         },
+        
       ],
     };
   
