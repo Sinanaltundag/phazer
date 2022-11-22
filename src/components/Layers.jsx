@@ -51,9 +51,9 @@ export default function App() {
   function getStopFrame(direction) {
     switch (direction) {
       case "up-right":
-        return 16;
+        return 25;
       case "down-right":
-        return 0;
+        return 35;
       case "down-left":
         return 5;
       case "up-left":
@@ -73,9 +73,18 @@ export default function App() {
       return tile?.properties?.trigger;
     });
   }
-  function hasColorTrigger(tilemap, position, color) {
+  function hasColorTrigger(tilemap, position, color, direction) {
     return tilemap.layers.some((layer) => {
-      const tile = tilemap.getTileAt(position.x, position.y, false, layer.name);
+      let tile;
+      if (direction === "up-right") {
+        tile = tilemap.getTileAt(position.x, position.y - 1, false, layer.name);
+      } else if (direction === "down-right") {
+        tile = tilemap.getTileAt(position.x + 1, position.y, false, layer.name);
+      } else if (direction === "down-left") {
+        tile = tilemap.getTileAt(position.x, position.y + 1, false, layer.name);
+      } else if (direction === "up-left") {
+        tile = tilemap.getTileAt(position.x - 1, position.y, false, layer.name);
+      }
       return tile?.properties?.color === color;
     });
   }
@@ -98,9 +107,9 @@ let upperText;
         this.load.image("drag2", "assets/rock.png");
         // this.load.image("sabit", "assets/rock.png");
         this.load.tilemapTiledJSON("iso-tileset", "assets/onelayer/layers2.json");
-        this.load.spritesheet("player", "assets/tank.png", {
-          frameWidth: 128,
-          frameHeight: 128,
+        this.load.spritesheet("player", "assets/iso_char.png", {
+          frameWidth: 15,
+          frameHeight: 32,
         });
         // this.load.spritesheet("player2", "assets/iso_char.png", {
         //   frameWidth: 15,
@@ -113,20 +122,9 @@ let upperText;
         for (let i = 0; i < cloudCityTilemap.layers.length; i++) {
           const layer = cloudCityTilemap.createLayer(i, "iso-tileset", 0, 0);
           layer.scale = 1;
-          layer.setDepth(i);
-          if (i === 0) {
-            layer.setCollisionByProperty({ collides: true });
-          } else {
-            console.log(layer);
-          }
-          // layer.offsetX = 10;
         }
         const playerSprite = this.add.sprite(0, 0, "player");
-        playerSprite.scale = 0.5;
-
-        // sabit = this.add.sprite(0, 0, "sabit");
-        // sabit.scale = 0.5;
-
+        playerSprite.scale = 2;
 
 
         this.ddraggable = this.add.sprite(0, 0, "drag");
@@ -146,28 +144,7 @@ let upperText;
 
         tintTile(cloudCityTilemap, 0, 4, 0xff0000);
         
-        // this.input.on("dragstart", function (pointer, gameObject) {
-          //   gameObject.setTint(0xff0000);
-          // });
-          // this.input.on("dragend", function (pointer, gameObject) {
-            //   gameObject.clearTint();
-        // });
-        
-        
-        // draggable.scale = 0.3;
-        // draggable.anchor.set(0.5);
-        // draggable.inputEnabled = true;
-        // draggable.input.enableDrag();
-        // draggable.input.enableSnap(32, 32, false, true);
-        // draggable.input.allowHorizontalDrag = false;
-        // draggable.input.allowVerticalDrag = false;
-        // draggable.input.boundsRect = new Phaser.Geom.Rectangle(0, 0, 800, 600);
-        // draggable.input.setDragLock(true, false);
-        // this.facingDirectionText = this.add.text(-60, -30, "direction", {
-          //   fontSize: "20px",
-        //   fill: "white",
-        //  });
-        console.log(this);
+        // console.log(this);
         upperText = this.add.text(-50, -30, "position", {
           fontSize: "20px",
           fill: "white",
@@ -184,15 +161,15 @@ let upperText;
         // this.cameras.main.centerOn(70, 0);
         this.cameras.main.setBackgroundColor("white");
         
-        this.game.events.on("myEvent", function (data) {
-          console.log(data);
+        // this.game.events.on("myEvent", function (data) {
+        //   console.log(data);
           
-        });
+        // });
         
-        createPlayerAnimation.call(this, "up-right", 14, 14);
-        createPlayerAnimation.call(this, "down-right", 13, 13);
-        createPlayerAnimation.call(this, "down-left", 3, 3);
-        createPlayerAnimation.call(this, "up-left", 16, 16);
+        createPlayerAnimation.call(this, "up-right", 26, 29);
+        createPlayerAnimation.call(this, "down-right", 36, 39);
+        createPlayerAnimation.call(this, "down-left", 6, 9);
+        createPlayerAnimation.call(this, "up-left", 16, 19);
         
         const gridEngineConfig = {
           characters: [
@@ -207,56 +184,31 @@ let upperText;
               container,
               // charLayer: 0, //! this is the layer for the sprite 
             },
-            // {
-            //   id: "draggable",
-            //   sprite: this.ddraggable,
-            //   startPosition: { x: 4, y: 0 },
-            //   charLayer: 0,
-            // }
-            // {
-              //   id: "Draggable",
-              //   sprite: draggable, //! this is the sprite but if container used  it will cause error
-              //   // offsetY: -5, //! this is the offset for the sprite but it causes a bug
-              //   startPosition: { x: 4, y: 0 },
-              //   walkingAnimationEnabled: false,
-              //   speed: 2,
-              //   draggable: true,
-              //   label: "red",
-              //   // charLayer: "ground",
-              // },
-              // {
-                //   id: "sabit",
-                //   sprite: sabit, //! this is the sprite but if container used  it will cause error
-                //   // offsetY: -5, //! this is the offset for the sprite but it causes a bug
-                //   startPosition: { x: 2, y: 2 },
-                //   draggable: true,
-                //   label: "blue",
-                //   // charLayer: "ground",
-                // },
-                
-                
-              ],
+          ],
             };
             this.gridEngine.create(cloudCityTilemap, gridEngineConfig);
             this.gridEngine.movementStarted().subscribe(({ direction }) => {
               playerSprite.anims.play(direction);
             });
-            
+            const _this = this;
+            this.detectColor = "blue";
             this.gridEngine
             .positionChangeFinished()
             .subscribe(({ charId, exitTile, enterTile }) => {
-                  
-              if (hasTrigger(cloudCityTilemap, enterTile)) {
-                console.log("triggered");
-              }
-              if (hasTrigger(cloudCityTilemap, exitTile)) {
-                console.log("distriggered");
-              }
-              if (hasColorTrigger(cloudCityTilemap, enterTile, "red")) {
-                console.log("red");
-              }
-              if (hasColorTrigger(cloudCityTilemap, enterTile, "blue")) {
-                console.log("blue");
+              const direction = _this.gridEngine.getFacingDirection("player");
+              // console.log(charId, exitTile,enterTile );
+              // console.log(direction);
+              // if (hasTrigger(cloudCityTilemap, enterTile)) {
+              //   console.log("triggered");
+              // }
+              // if (hasTrigger(cloudCityTilemap, exitTile)) {
+              //   console.log("distriggered");
+              // }
+              // if (hasColorTrigger(cloudCityTilemap, enterTile, "red")) {
+              //   console.log("red");
+              // }
+              if (hasColorTrigger(cloudCityTilemap, enterTile, this.detectColor, direction)) {
+                console.log(this.detectColor);
               }
             });
         this.gridEngine.movementStopped().subscribe(({ direction }) => {
@@ -279,9 +231,8 @@ let upperText;
         console.log(this.gridEngine.getCharactersAt({x:4,y:0},"trees"));
         // console.log(this.gridEngine.getLabels("Draggable"));
         console.log(this.gridEngine.getCharLayer("player"));
-        console.log(this.gridEngine.movementStopped());
-        console.log(this.gridEngine.movementStarted());
-        
+        // console.log(this.gridEngine.movementStopped());
+        // console.log(this.gridEngine.movementStarted());
       },
       
       update: function () {
@@ -342,6 +293,9 @@ let upperText;
             _this.gridEngine.moveTo("player", {x:position.x , y:position.y-data.y});
             }
           }
+          });
+          this.game.events.on("colorEvent", function (data) {
+            _this.detectColor = data;
           });
         //  facingDirectionText.text = `facingDirection: ${this.gridEngine.getFacingDirection(
         //   "player"
@@ -449,6 +403,17 @@ let upperText;
       <button onClick={() => currentGame?.events.emit("moveTo", {dir:"down-right", x: 5})}>Move To Down-left</button>
       <button onClick={() => currentGame?.events.emit("moveTo", {dir:"up-left", x: 8})}>Move To Down-left</button>
       <button onClick={() => currentGame?.events.emit("moveTo", {dir:"up-right", y: 5})}>Move To Down-left</button>
+
+      <button
+      onClick={() => currentGame?.events.emit("colorEvent", "blue")}
+      >
+        Detect Blue
+      </button>
+      <button
+      onClick={() => currentGame?.events.emit("colorEvent", "red")}
+      >
+        Detect Red
+      </button>
 
       </div>
     </>
