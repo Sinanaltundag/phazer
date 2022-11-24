@@ -6,43 +6,24 @@ import { GridEngine } from "grid-engine";
 // var game = new Phaser.Game(config);
 
 export default function App() {
-  function createPlayerAnimation(name, startFrame, endFrame) {
+  function createPlayerAnimation(
+    name,
+    startFrame,
+    endFrame,
+    frameRate,
+    spriteSheet
+  ) {
     this.anims.create({
       key: name,
-      frames: this.anims.generateFrameNumbers("player", {
+      frames: this.anims.generateFrameNumbers(spriteSheet, {
         start: startFrame,
         end: endFrame,
       }),
-      frameRate: 5,
+      frameRate: frameRate,
       repeat: -1,
       yoyo: false,
     });
   }
-
-  // function createObjects(collisionGroups) {
-  //   const player = this.physics.add.sprite(100, 100, "player");
-  //   player.setCollideWorldBounds(true);
-  //   player.body.setGravityY(300);
-  //   player.body.setSize(16, 16);
-  //   player.body.setOffset(8, 8);
-  //   player.body.setBounce(0.2);
-  //   player.body.setDragX(1000);
-  //   player.body.setCollideWorldBounds(true);
-  //   player.body.setCollisionGroup(collisionGroups.player);
-  //   player.body.collides([collisionGroups.platforms, collisionGroups.spikes]);
-  //   player.body.onWorldBounds = true;
-
-  //   createPlayerAnimation.call(this, "idle", 0, 0);
-  //   createPlayerAnimation.call(this, "run", 1, 3);
-  //   createPlayerAnimation.call(this, "jump", 4, 4);
-  //   createPlayerAnimation.call(this, "fall", 5, 5);
-  //   createPlayerAnimation.call(this, "hurt", 6, 6);
-
-  //   player.anims.play("idle");
-
-  //   return { player };
-
-  // }
 
   function getStopFrame(direction) {
     switch (direction) {
@@ -103,8 +84,6 @@ export default function App() {
       }
       return tile?.properties?.color === colorProps.color;
     });
-
-
   }
 
   let upperText;
@@ -132,6 +111,10 @@ export default function App() {
           frameWidth: 15,
           frameHeight: 32,
         });
+        this.load.spritesheet("player2", "assets/iso_char_light.png", {
+          frameWidth: 15,
+          frameHeight: 32,
+        });
         // this.load.spritesheet("player2", "assets/iso_char.png", {
         //   frameWidth: 15,
         //   frameHeight: 32,
@@ -146,6 +129,9 @@ export default function App() {
         }
         const playerSprite = this.add.sprite(0, 0, "player");
         playerSprite.scale = 2;
+
+        // const playerSprite2 = this.add.sprite(0, 0, "player2");
+        // playerSprite2.scale = 2;
 
         this.ddraggable = this.add.sprite(0, 0, "drag");
         this.ddraggable.scale = 0.5;
@@ -188,33 +174,110 @@ export default function App() {
         //   console.log(data);
 
         // });
-
-        createPlayerAnimation.call(this, "up-right", 26, 29);
-        createPlayerAnimation.call(this, "down-right", 36, 39);
-        createPlayerAnimation.call(this, "down-left", 6, 9);
-        createPlayerAnimation.call(this, "up-left", 16, 19);
-
+        
+        function animations(currentSpritesheet) {
+        createPlayerAnimation.call(
+          this,
+          "up-right",
+          26,
+          29,
+          10,
+          currentSpritesheet
+        );
+        createPlayerAnimation.call(
+          this,
+          "down-right",
+          36,
+          39,
+          10,
+          currentSpritesheet
+        );
+        createPlayerAnimation.call(
+          this,
+          "down-left",
+          6,
+          9,
+          5,
+          currentSpritesheet
+        );
+        createPlayerAnimation.call(
+          this,
+          "up-left",
+          16,
+          19,
+          5,
+          currentSpritesheet
+        );
+        }
+        // animations.call(this, "player");
         const gridEngineConfig = {
           characters: [
             {
               id: "player",
-              // sprite: playerSprite, //! this is the sprite but if container used  it will cause error
+              sprite: playerSprite, //! this is the sprite but if container used  it will cause error
               // offsetY: -5, //! this is the offset for the sprite but it causes a bug
               startPosition: { x: 0, y: 0 },
-              offsetX: 50,
-              walkingAnimationEnabled: false,
+              offsetY: -20,
+              walkingAnimationMapping: {
+                "up-left": {
+                  leftFoot: 18,
+                  standing: 15,
+                  rightFoot: 16,
+                },
+                "up-right": {
+                  leftFoot: 26,
+                  standing: 25,
+                  rightFoot: 28,
+                },
+                "down-left": {
+                  leftFoot: 6,
+                  standing: 5,
+                  rightFoot: 8,
+                },
+                "down-right": {
+                  leftFoot: 36,
+                  standing: 35,
+                  rightFoot: 38,
+                },
+              },
+              // walkingAnimationEnabled: false,
               speed: 4,
               container,
               // charLayer: 0, //! this is the layer for the sprite
             },
+            // {
+            //   id: "player2",
+            //   sprite: playerSprite2,
+            //   startPosition: { x: 0, y: 0 },
+            //   offsetX: 50,
+            //   walkingAnimationEnabled: false,
+            //   speed: 4,
+            // },
           ],
         };
         this.gridEngine.create(cloudCityTilemap, gridEngineConfig);
-        this.gridEngine.movementStarted().subscribe(({ direction }) => {
-          playerSprite.anims.play(direction);
-        });
+        // this.gridEngine.movementStarted().subscribe(({ direction }) => {
+        //   playerSprite.anims.play(direction);
+        // });
         const _this = this;
         this.detectColor = { color: "blue", range: 1 };
+        this.gridEngine
+          .movementStarted()
+          .subscribe(({ direction, character }) => {
+            setPosition(true)
+          });
+        function straightMove(x) {
+          this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
+            const enterTile = _this.gridEngine.getPosition(charId)
+            if (enterTile.x!==x) {
+            _this.gridEngine.move("player", direction);
+            setPosition(false)
+            }          
+          });
+        }
+        straightMove.call(this, 3)
+        // this.straightMove = straightMove.bind(this)
+        // this.straightMove(3)
         this.gridEngine
           .positionChangeFinished()
           .subscribe(({ charId, exitTile, enterTile }) => {
@@ -227,6 +290,8 @@ export default function App() {
             // if (hasTrigger(cloudCityTilemap, exitTile)) {
             //   console.log("distriggered");
             // }
+            // _this.gridEngine.stopMovement("player");
+            // _this.gridEngine.move("player", "down-right");
             if (
               hasColorTrigger(
                 cloudCityTilemap,
@@ -237,20 +302,72 @@ export default function App() {
             ) {
               console.log(this.detectColor);
             }
+            setPosition(false)
+            return { charId, exitTile, enterTile };
           });
-        
+        //   this.game.events.on("isPositionChanged", function () {
+        //     _this.gridEngine.positionChangeFinished().subscribe(({ charId, exitTile, enterTile }) => {
+        //       setPosition(enterTile);
+        //   });
+        // });
+
+        // this.input.keyboard.on("keydown", (event) => {
+        //   if (event.key === "a") {
+        //     console.log("character adding");
+        //     // this.gridEngine.removeCharacter("player");
+        //     playerSprite.destroy();
+        //     // playerSprite.destroy();
+        //     this.gridEngine.removeCharacter("player");
+        //     this.gridEngine.addCharacter("player", {
+        //       sprite: playerSprite2,
+        //       startPosition: { x: 5, y: 0 },
+        //       offsetX: 50,
+        //       walkingAnimationEnabled: false,
+        //       speed: 4,
+        //       charLayer: 0,
+        //     });
+        //     // console.log(this.gridEngine.getCharacter("player2"));
+
+        //   }
+        // });
+        this.game.events.on("changeChar", function (data) {
+          console.log(data);
+            const dir=_this.gridEngine.getFacingDirection("player");
+            if (dir === "down-right") {
+              playerSprite.setTexture(data, 35);
+            } else if (dir === "down-left") {
+              playerSprite.setTexture(data, 5);
+            } else if (dir === "up-right") {
+              playerSprite.setTexture(data, 25);
+            } else if (dir === "up-left") {
+              playerSprite.setTexture(data, 15);
+            } else {
+              playerSprite.setTexture(data, 0);
+            }
           
+          // animations.call(_this, "player2");
+          // console.log(_this.gridEngine.getSprite("player")) 
+          // _this.gridEngine.setSprite("player", playerSprite2);
+          // _this.gridEngine.setWalkingAnimationMapping("player", {
+          //   "up-left": {
+          //     leftFoot: 18,
+          //     standing: 15,
+          //     rightFoot: 16,
+          //   },
 
-        this.gridEngine.movementStopped().subscribe(({ direction }) => {
-          playerSprite.anims.stop();
-          playerSprite.setFrame(getStopFrame(direction));
+          // });
+
         });
 
-        this.gridEngine.directionChanged().subscribe(({ direction }) => {
-          playerSprite.setFrame(getStopFrame(direction));
-        });
-        // EXPOSE TO EXTENSION
-        window.__GRID_ENGINE__ = this.gridEngine;
+        // this.gridEngine.movementStopped().subscribe(({ direction }) => {
+        //   playerSprite.anims.stop();
+        //   playerSprite.setFrame(getStopFrame(direction));
+        // });
+
+        // this.gridEngine.directionChanged().subscribe(({ direction }) => {
+        //   playerSprite.setFrame(getStopFrame(direction));
+        // });
+
         this.gridEngine.addLabels("player", ["red"]);
         // console.log(this.gridEngine.hasCharacter("Draggable"));
         const label = this.gridEngine.getLabels("player");
@@ -265,7 +382,7 @@ export default function App() {
         // console.log(this.gridEngine.movementStarted());
       },
 
-      update: function () {
+      update: async function () {
         const cursors = this.input.keyboard.createCursorKeys();
         if (cursors.left.isDown) {
           this.gridEngine.move("player", "up-left");
@@ -278,6 +395,8 @@ export default function App() {
         } else if (cursors.down.isDown) {
           for (let index = 0; index < 5; index++) {
             this.gridEngine.move("player", "down-left");
+            // const  aaa= await this.gridEngine.movementStopped();
+            // console.log(aaa);
           }
         }
         const _this = this;
@@ -341,9 +460,10 @@ export default function App() {
           console.log(upperText);
           upperText.setStyle({
             color: data.color,
-            });
+          });
           _this.cameras.main.setBackgroundColor(data.bgColor);
         });
+
         //   "player"
         // )}`;
         // console.log(this.gridEngine.getFacingDirection("player"));
@@ -379,7 +499,7 @@ export default function App() {
           this.gridEngine.getFacingDirection("player") === "down-left"
         ) {
           upperText.text = "Yol bitti. Dönüş yapılıyor";
-          // this.gridEngine.setSprite("player", this.newPlayerSprite);
+          // this.gridEngine.setSprite("player", this.newplayerSprite);
         } else if (
           this.gridEngine.getPosition("player").x === 0 &&
           this.gridEngine.getPosition("player").y === 2 &&
@@ -412,6 +532,7 @@ export default function App() {
   const [game, setGame] = useState(config);
   const [currentColor, setCurrentColor] = useState("blue");
   const [currentRange, setCurrentRange] = useState("1");
+  const [position, setPosition] = useState(null);
   const gameRef = useRef(null);
   const game1 = () => {
     gameRef.current?.getInstance().then((instance) => {
@@ -454,7 +575,10 @@ export default function App() {
           Up Left
         </button>
         <button
-          onClick={() => currentGame?.events.emit("myEvent2", "up-right")}
+          onClick={async() => {
+           const aaa = await currentGame?.events.emit("myEvent2", "up-right")
+            console.log(aaa);
+          }}
         >
           Up Right
         </button>
@@ -464,12 +588,20 @@ export default function App() {
           Down Left
         </button>
         <button
-          onClick={() => currentGame?.events.emit("myEvent2", "down-right")}
+          onClick={async() => {
+           const ccc = await currentGame?.events.emit("myEvent2", "down-right")
+              
+            console.log(ccc);
+            ccc && await currentGame?.events.emit("myEvent2", "down-right") 
+        }}
         >
           Down Right
         </button>
         <button
-          onClick={() => currentGame?.events.emit("turnEvent", "turn-up-left")}
+          onClick={async() => {
+           const bbb= await currentGame?.events.emit("turnEvent", "turn-up-left")
+            console.log(bbb);
+          }}
         >
           Turn Up-Left
         </button>
@@ -507,54 +639,74 @@ export default function App() {
         >
           Move To Down-left
         </button>
-          <div>
+        <div>
           <p>Color detection</p>
-        <label htmlFor="color">Select Color</label>
-        <select
-          name="color"
-          id="color"
-          onChange={(e) => {
-            setCurrentColor(e.target.value);
-            currentGame?.events.emit("colorEvent", {
-              color: e.target.value,
-              range: currentRange,
-            });
-          }}
+          <label htmlFor="color">Select Color</label>
+          <select
+            name="color"
+            id="color"
+            onChange={(e) => {
+              setCurrentColor(e.target.value);
+              currentGame?.events.emit("colorEvent", {
+                color: e.target.value,
+                range: currentRange,
+              });
+            }}
           >
-          <option value="blue">Blue</option>
-          <option value="red">Red</option>
-        </select>
-        <label htmlFor="range">Select Range</label>
-        <select
-          name="range"
-          id="range"
-          onChange={(e) => {
-            setCurrentRange(e.target.value);
-            currentGame?.events.emit("colorEvent", {
-              color: currentColor,
-              range: e.target.value,
-            });
-          }}
+            <option value="blue">Blue</option>
+            <option value="red">Red</option>
+          </select>
+          <label htmlFor="range">Select Range</label>
+          <select
+            name="range"
+            id="range"
+            onChange={(e) => {
+              setCurrentRange(e.target.value);
+              currentGame?.events.emit("colorEvent", {
+                color: currentColor,
+                range: e.target.value,
+              });
+            }}
           >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-        </select>
-          </div>
-          <button
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+        <button
           onClick={() =>
-            currentGame?.events.emit("setBackground", {bgColor: "#000000", color: "#ffffff"})
+            currentGame?.events.emit("setBackground", {
+              bgColor: "#000000",
+              color: "#ffffff",
+            })
           }
-          >
-            Set Background Night
-          </button>
-          <button
+        >
+          Set Background Night
+        </button>
+        <button
           onClick={() =>
-            currentGame?.events.emit("setBackground", {bgColor:"#c9f6ff", color:"#000000"})
+            currentGame?.events.emit("setBackground", {
+              bgColor: "#c9f6ff",
+              color: "#000000",
+            })
           }
-          >
-            Set Background DayTime
-          </button>
+        >
+          Set Background DayTime
+        </button>
+        <button
+          onClick={() =>
+            currentGame?.events.emit("changeChar", "player2")
+          }
+        >
+          Change Character
+        </button>
+        <button
+          onClick={() =>
+            currentGame?.events.emit("changeChar", "player")
+          }
+        >
+          Change Character Back
+        </button>
       </div>
     </>
   );
