@@ -41,7 +41,18 @@
          "spacing":0,
          "tilecount":24,
          "tileheight":64,
-         "tilewidth":64
+         "tilewidth":64,
+         "tiles":[
+                {
+                 "id":17,
+                 "properties":[
+                        {
+                         "name":"ge_collide",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }
+              ]
         }],
  "tilewidth":64,
  "type":"map",

@@ -262,23 +262,6 @@ export default function App() {
         const _this = this;
         this.detectColor = { color: "blue", range: 1 };
         this.gridEngine
-          .movementStarted()
-          .subscribe(({ direction, character }) => {
-            setPosition(true)
-          });
-        function straightMove(x) {
-          this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
-            const enterTile = _this.gridEngine.getPosition(charId)
-            if (enterTile.x!==x) {
-            _this.gridEngine.move("player", direction);
-            setPosition(false)
-            }          
-          });
-        }
-        straightMove.call(this, 3)
-        // this.straightMove = straightMove.bind(this)
-        // this.straightMove(3)
-        this.gridEngine
           .positionChangeFinished()
           .subscribe(({ charId, exitTile, enterTile }) => {
             const direction = _this.gridEngine.getFacingDirection("player");
@@ -290,8 +273,6 @@ export default function App() {
             // if (hasTrigger(cloudCityTilemap, exitTile)) {
             //   console.log("distriggered");
             // }
-            // _this.gridEngine.stopMovement("player");
-            // _this.gridEngine.move("player", "down-right");
             if (
               hasColorTrigger(
                 cloudCityTilemap,
@@ -302,14 +283,7 @@ export default function App() {
             ) {
               console.log(this.detectColor);
             }
-            setPosition(false)
-            return { charId, exitTile, enterTile };
           });
-        //   this.game.events.on("isPositionChanged", function () {
-        //     _this.gridEngine.positionChangeFinished().subscribe(({ charId, exitTile, enterTile }) => {
-        //       setPosition(enterTile);
-        //   });
-        // });
 
         // this.input.keyboard.on("keydown", (event) => {
         //   if (event.key === "a") {
@@ -532,7 +506,6 @@ export default function App() {
   const [game, setGame] = useState(config);
   const [currentColor, setCurrentColor] = useState("blue");
   const [currentRange, setCurrentRange] = useState("1");
-  const [position, setPosition] = useState(null);
   const gameRef = useRef(null);
   const game1 = () => {
     gameRef.current?.getInstance().then((instance) => {
@@ -567,18 +540,12 @@ export default function App() {
       >
         say hello console
       </button>
-      {/* <button onClick={() => currentGame?.events.emit("myEvent3", "hello everybody")}>
-        say hello upper
-      </button> */}
       <div>
         <button onClick={() => currentGame?.events.emit("myEvent2", "up-left")}>
           Up Left
         </button>
         <button
-          onClick={async() => {
-           const aaa = await currentGame?.events.emit("myEvent2", "up-right")
-            console.log(aaa);
-          }}
+          onClick={() => currentGame?.events.emit("myEvent2", "up-right")}
         >
           Up Right
         </button>
@@ -588,20 +555,12 @@ export default function App() {
           Down Left
         </button>
         <button
-          onClick={async() => {
-           const ccc = await currentGame?.events.emit("myEvent2", "down-right")
-              
-            console.log(ccc);
-            ccc && await currentGame?.events.emit("myEvent2", "down-right") 
-        }}
+          onClick={() => currentGame?.events.emit("myEvent2", "down-right")}
         >
           Down Right
         </button>
         <button
-          onClick={async() => {
-           const bbb= await currentGame?.events.emit("turnEvent", "turn-up-left")
-            console.log(bbb);
-          }}
+          onClick={() => currentGame?.events.emit("turnEvent", "turn-up-left")}
         >
           Turn Up-Left
         </button>

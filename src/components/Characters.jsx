@@ -20,40 +20,27 @@ export default function App() {
       yoyo: false,
     });
   }
-
-
-
-  // function createObjects(collisionGroups) {
-  //   const player = this.physics.add.sprite(100, 100, "player");
-  //   player.setCollideWorldBounds(true);
-  //   player.body.setGravityY(300);
-  //   player.body.setSize(16, 16);
-  //   player.body.setOffset(8, 8);
-  //   player.body.setBounce(0.2);
-  //   player.body.setDragX(1000);
-  //   player.body.setCollideWorldBounds(true);
-  //   player.body.setCollisionGroup(collisionGroups.player);
-  //   player.body.collides([collisionGroups.platforms, collisionGroups.spikes]);
-  //   player.body.onWorldBounds = true;
-
-  //   createPlayerAnimation.call(this, "idle", 0, 0);
-  //   createPlayerAnimation.call(this, "run", 1, 3);
-  //   createPlayerAnimation.call(this, "jump", 4, 4);
-  //   createPlayerAnimation.call(this, "fall", 5, 5);
-  //   createPlayerAnimation.call(this, "hurt", 6, 6);
-
-  //   player.anims.play("idle");
-
-  //   return { player };
-    
+  // function createTurnAnimation(name, startFrame, endFrame) {
+  //   this.anims.create({
+  //     key: name,
+  //     frames: this.anims.generateFrameNumbers("player", {
+  //       start: startFrame,
+  //       end: endFrame,
+  //     }),
+  //     frameRate: 5,
+  //     repeat: -1,
+  //     yoyo: false,
+  //   });
   // }
+
+
 
   function getStopFrame(direction) {
     switch (direction) {
       case "up-right":
-        return 16;
+        return 25;
       case "down-right":
-        return 0;
+        return 35;
       case "down-left":
         return 5;
       case "up-left":
@@ -65,10 +52,7 @@ export default function App() {
 let upperText;
 let draggable;
   const config = {
-    scale: {
-      // mode: Phaser.Scale.FIT,
-      autoCenter: Phaser.Scale.CENTER_BOTH,
-    },
+
     width: 800,
     height: 600,
     type: Phaser.AUTO,
@@ -77,9 +61,9 @@ let draggable;
         this.load.image("iso-tile", "assets/onelayer/ground.png");
         this.load.image("drag", "assets/rock.png");
         this.load.tilemapTiledJSON("iso-tileset", "assets/onelayer/onelayer.json");
-        this.load.spritesheet("player", "assets/tank.png", {
-          frameWidth: 128,
-          frameHeight: 128,
+        this.load.spritesheet("player", "assets/iso_char.png", {
+          frameWidth: 15,
+          frameHeight: 32,
         });
         // this.load.spritesheet("player2", "assets/iso_char.png", {
         //   frameWidth: 15,
@@ -94,7 +78,7 @@ let draggable;
           layer.scale = 1;
         }
         const playerSprite = this.add.sprite(0, 0, "player");
-        playerSprite.scale = 0.5;
+        playerSprite.scale = 2;
 
         draggable = this.add.sprite(0, 0, "drag");
         draggable.scale = 0.5;
@@ -147,11 +131,10 @@ let draggable;
            
           });
   
-        createPlayerAnimation.call(this, "up-right", 14, 14);
-        createPlayerAnimation.call(this, "down-right", 13, 13);
-        createPlayerAnimation.call(this, "down-left", 3, 3);
-        createPlayerAnimation.call(this, "up-left", 16, 16);
-          
+          createPlayerAnimation.call(this, "up-right", 26, 29);
+          createPlayerAnimation.call(this, "down-right", 36, 39);
+          createPlayerAnimation.call(this, "down-left", 6, 9);
+          createPlayerAnimation.call(this, "up-left", 16, 19);
         const gridEngineConfig = {
           characters: [
             {
@@ -164,16 +147,16 @@ let draggable;
               speed: 4,
               container,
             },
-            {
-              id: "Draggable",
-              sprite: draggable, //! this is the sprite but if container used  it will cause error
-              // offsetY: -5, //! this is the offset for the sprite but it causes a bug
-              startPosition: { x: 2, y: 2 },
-              walkingAnimationEnabled: false,
-              speed: 2,
-              draggable: true,
+            // {
+            //   id: "Draggable",
+            //   sprite: draggable, //! this is the sprite but if container used  it will cause error
+            //   // offsetY: -5, //! this is the offset for the sprite but it causes a bug
+            //   startPosition: { x: 2, y: 2 },
+            //   walkingAnimationEnabled: false,
+            //   speed: 2,
+            //   draggable: true,
               
-            },
+            // },
             
 
           ],

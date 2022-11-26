@@ -8,9 +8,11 @@ import './App.css';
 // import PlayerFuncs from './components/PlayerFuncs';
 // import UpCamera from './components/UpCamera';
 // import NewMap from './components/NewMap';
-// import NewMapOrthogonal from './components/NewMapOrthogonal';
-// import Characters from './components/Characters';
-import Layers from './components/Layers';
+import NewMapOrthogonal from './components/NewMapOrthogonal';
+import Characters from './components/Characters';
+// import Layers from './components/Layers';
+import Straight from './components/Straight';
+// import RestrictedArea from './components/RestrictedArea';
 
 function App() {
   // const [start, setStart] = useState(false);
@@ -26,8 +28,10 @@ function App() {
       {/* <UpCamera/> */}
       {/* <NewMap/> */}
       {/* <NewMapOrthogonal/> */}
-      {/* <Characters/> */}
-      <Layers/>
+      <Characters/>
+      {/* <Layers/> */}
+      {/* <Straight/> */}
+      {/* <RestrictedArea/> */}
     </div>
   );
 }

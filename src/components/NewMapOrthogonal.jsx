@@ -46,11 +46,12 @@ export default function App() {
           id: "player",
           sprite: playerSprite,
           walkingAnimationMapping: 2,
-          startPosition: { x: 5, y: 4 },
+          startPosition: { x: 4, y: 0 },
         },
         
       ],
     };
+
   
     this.gridEngine.create(tilemap, gridEngineConfig);
   
@@ -106,19 +107,41 @@ export default function App() {
             _this.gridEngine.move("player", "up");
           }
          });
-        this.game.events.on("moveTo", function (data) {
-          const position = _this.gridEngine.getPosition("player")
-          console.log(position);
-          console.log(data);
-          if (data.dir==="down-left") {
-            _this.gridEngine.moveTo("player", {x:position.x , y:position.y+data.y});
-          }
-          });
+        // this.game.events.on("moveTo", function (data) {
+        //   const position = _this.gridEngine.getPosition("player")
+        //   console.log(position);
+        //   console.log(data);
+        //   if (data.dir==="down-left") {
+        //     _this.gridEngine.moveTo("player", {x:position.x , y:position.y+data.y});
+        //   }
+        //   });
     this.game.events.on("turnEvent", function (data) {
       if (data==="turn-up-left") {
         console.log("turn up");
         _this.gridEngine.turnTowards("player", "down-right");
       }});
+
+      this.game.events.on("moveTo", function (data) {
+
+        const position = _this.gridEngine.getPosition("player");
+        // console.log(position);
+        console.log(data);
+        if (data.dir === "down-left") {
+          const maxRange = data.y + position.y > 9 ? 9 : data.y+position.y;
+            _this.gridEngine.moveTo(
+              "player",
+              { x: position.x, y: maxRange },
+              {
+                noPathFoundStrategy: "CLOSEST_REACHABLE",
+                // pathBlockedStrategy: "STOP",
+                isPositionAllowedFn: (pos) => {
+                  console.log(pos);
+                  return pos.x === position.x;
+                }
+              }
+            );
+        }
+            });
   }
 // let upperText;
   const config = {
@@ -175,9 +198,7 @@ export default function App() {
       <button onClick={() => currentGame?.events.emit("myEvent", "hello everybody")}>
         say hello console
       </button>
-      {/* <button onClick={() => currentGame?.events.emit("myEvent3", "hello everybody")}>
-        say hello upper
-      </button> */}
+
       <div>
       <button onClick={() => currentGame?.events.emit("myEvent2", "up-left")} >Up Left</button>
       <button onClick={() => currentGame?.events.emit("myEvent2", "up-right")} >Up Right</button>
@@ -187,6 +208,13 @@ export default function App() {
       <button onClick={() => currentGame?.events.emit("setSpeed", 4)}>Set Speed 2X</button>
       <button onClick={() => currentGame?.events.emit("setSpeed", 2)}>Set Speed Normal</button>
       <button onClick={() => currentGame?.events.emit("moveTo", {dir:"down-left", y: 2})}>Move To Down-left</button>
+      <button
+          onClick={() =>
+            currentGame?.events.emit("moveTo", { dir: "down-left", y: 4 })
+          }
+        >
+          Move To Down-left
+        </button>
 
       </div>
     </>
