@@ -6,6 +6,10 @@ import { GridEngine } from "grid-engine";
 // var game = new Phaser.Game(config);
 
 export default function App() {
+
+  const [isStopped, setIsStopped] = useState(true);
+
+
   function createPlayerAnimation(
     name,
     startFrame,
@@ -92,12 +96,24 @@ export default function App() {
       return tile?.properties?.allowed;
     });
   }
+  let moveResult = new Promise((resolve, reject) => {
+    if (isStopped) {
+      resolve("stopped");
+    } else {
+      resolve("moving");
+    }
+  });
   let aaa = 1;
 
   let upperText;
   // let draggable;
   // let sabit;
   const config = {
+    scale : {
+      mode: Phaser.Scale.Zoom,
+
+      // autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
     // scale: {
     //   // mode: Phaser.Scale.FIT,
     //   autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -108,7 +124,7 @@ export default function App() {
     scene: {
       preload: function () {
         this.load.image("iso-tile", "assets/onelayer/ground3.png");
-        this.load.image("drag", "assets/rock.png");
+        this.load.image("rock", "assets/rock.png");
         this.load.image("drag2", "assets/rock.png");
         // this.load.image("sabit", "assets/rock.png");
         this.load.tilemapTiledJSON(
@@ -141,10 +157,10 @@ export default function App() {
         // const playerSprite2 = this.add.sprite(0, 0, "player2");
         // playerSprite2.scale = 2;
 
-        this.ddraggable = this.add.sprite(0, 0, "drag");
-        this.ddraggable.scale = 0.5;
-        this.ddraggable.setInteractive();
-        this.input.setDraggable(this.ddraggable);
+        this.rock = this.add.sprite(0, 0, "rock");
+        this.rock.scale = 0.5;
+        this.rock.setInteractive();
+        this.input.setDraggable(this.rock);
         this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
           gameObject.x = dragX;
           gameObject.y = dragY;
@@ -154,6 +170,18 @@ export default function App() {
         });
         this.input.on("dragend", function (pointer, gameObject) {
           gameObject.clearTint();
+        });
+
+        this.input.on("gameout", function (pointer, gameObject) {
+          console.log("gameout");
+        });
+
+        this.input.on("wheel", function (pointer, gameObject, deltaX, deltaY) {
+          console.log(deltaX, deltaY, pointer, gameObject);
+          if ( _this.cameras.main.zoom + deltaY * 0.005 > 0.9 && _this.cameras.main.zoom + deltaY * 0.005 < 5) {
+
+            _this.cameras.main.zoom += deltaY * 0.005;
+          }
         });
 
         tintTile(cloudCityTilemap, 0, 4, 0xff0000);
@@ -353,6 +381,80 @@ export default function App() {
           } else {
             playerSprite.setTexture(data, 0);
           }
+        });
+
+        this.game.events.on("moveTo", function (data) {
+          aaa += 1;
+          console.log(aaa);
+          const position = _this.gridEngine.getPosition("player");
+
+          if (data.dir === "down-left") {
+              _this.gridEngine.moveTo(
+                "player",
+                { x: position.x, y: data.y + position.y },
+                {
+                  noPathFoundStrategy: "CLOSEST_REACHABLE",
+                  pathBlockedStrategy: "STOP",
+                  isPositionAllowedFn: (pos) => {
+                    console.log(pos);
+                    return pos.x === position.x;
+                  }
+                }
+                );
+          } else if (data.dir === "down-right") {
+            if (position.x + data.x < 10) {
+              _this.gridEngine.moveTo("player", {
+                x: position.x + data.x,
+                y: position.y,
+              },
+              {
+                noPathFoundStrategy: "CLOSEST_REACHABLE",
+                pathBlockedStrategy: "STOP",
+                isPositionAllowedFn: (pos) => {
+                  console.log(pos);
+                  return pos.y === position.y;
+                }
+              });
+            }
+          } else if (data.dir === "up-left") {
+            if (position.x - data.x >= 0) {
+              _this.gridEngine.moveTo("player", {
+                x: position.x - data.x,
+                y: position.y,
+              },
+              {
+                noPathFoundStrategy: "CLOSEST_REACHABLE",
+                pathBlockedStrategy: "STOP",
+                isPositionAllowedFn: (pos) => {
+                  console.log(pos);
+                  return pos.y === position.y;
+                }
+              });
+            }
+          } else if (data.dir === "up-right") {
+            if (position.y - data.y >= 0) {
+              _this.gridEngine.moveTo("player", {
+                x: position.x,
+                y: position.y - data.y,
+              },
+              {
+                noPathFoundStrategy: "CLOSEST_REACHABLE",
+                pathBlockedStrategy: "STOP",
+                isPositionAllowedFn: (pos) => {
+                  console.log(pos);
+                  return pos.x === position.x;
+                }
+              });
+            }
+          }
+        });
+
+        _this.gridEngine.movementStopped().subscribe(({ direction }) => {
+          setIsStopped(true);
+        });
+        _this.gridEngine.movementStarted().subscribe(({ direction }) => {
+          setIsStopped(false);
+        });
 
           // animations.call(_this, "player2");
           // console.log(_this.gridEngine.getSprite("player"))
@@ -365,7 +467,6 @@ export default function App() {
           //   },
 
           // });
-        });
 
         // this.gridEngine.movementStopped().subscribe(({ direction }) => {
         //   playerSprite.anims.stop();
@@ -419,76 +520,7 @@ export default function App() {
             _this.gridEngine.move("player", "up-right");
           }
         });
-        this.game.events.on("moveTo", function (data) {
-          aaa += 1;
-          console.log(aaa);
-          const position = _this.gridEngine.getPosition("player");
 
-          if (data.dir === "down-left") {
-            const maxRange = data.y + position.y ;
-              _this.gridEngine.moveTo(
-                "player",
-                { x: position.x, y: maxRange },
-                {
-                  noPathFoundStrategy: "CLOSEST_REACHABLE",
-                  pathBlockedStrategy: "STOP",
-                  isPositionAllowedFn: (pos) => {
-                    console.log(pos);
-                    return pos.x === position.x;
-                  }
-                }
-                );
-            // if (position.y + data.y < 10) {
-            //   _this.gridEngine.moveTo(
-            //     "player",
-            //     { x: position.x, y: position.y + data.y },
-            //     {
-            //       noPathFoundStrategy: "CLOSEST_REACHABLE",
-            //       // pathBlockedStrategy: "STOP",
-            //       isPositionAllowedFn: (pos) => {
-            //         console.log(pos);
-            //         return pos.x === position.x;
-            //       },
-            //     }
-            //   );
-            // }
-            // const maxRange = data.y + position.y > 9 ? 9 : data.y+position.y;
-            //   _this.gridEngine.move("player", "down-left")
-            //   _this.gridEngine.movementStopped().subscribe(({ direction }) => {
-            //     console.log(direction);
-            //     if (position.y < maxRange) {
-            //       _this.gridEngine.move("player", "down-left");
-            //     }
-            //   });
-          } else if (data.dir === "down-right") {
-            if (position.y + data.y > 9) {
-              _this.gridEngine.moveTo("player", { x: 9, y: position.y });
-            } else {
-              _this.gridEngine.moveTo("player", {
-                x: position.x + data.x,
-                y: position.y,
-              });
-            }
-          } else if (data.dir === "up-left") {
-            if (position.y - data.y < 0) {
-              _this.gridEngine.moveTo("player", { x: 0, y: position.y });
-            } else {
-              _this.gridEngine.moveTo("player", {
-                x: position.x - data.x,
-                y: position.y,
-              });
-            }
-          } else if (data.dir === "up-right") {
-            if (position.y - data.y < 0) {
-              _this.gridEngine.moveTo("player", { x: position.x, y: 0 });
-            } else {
-              _this.gridEngine.moveTo("player", {
-                x: position.x,
-                y: position.y - data.y,
-              });
-            }
-          }
-        });
         this.game.events.on("colorEvent", function (data) {
           _this.detectColor = data;
         });
@@ -661,36 +693,33 @@ export default function App() {
           Set Speed Normal
         </button>
         <button
-          onClick={() =>
-            currentGame?.events.emit("moveTo", { dir: "down-left", y: 5 })
-          }
-        >
-          Move To Down-left
-        </button>
-        <button
-          onClick={() =>
+          onClick={() =>{
             currentGame?.events.emit("moveTo", { dir: "down-left", y: 4 })
+           console.log("moveee",moveResult) ;
+          }
           }
         >
           Move To Down-left
         </button>
         <button
-          onClick={() =>
-            currentGame?.events.emit("moveTo", { dir: "down-right", x: 5 })
+          onClick={() =>{
+            currentGame?.events.emit("moveTo", { dir: "down-right", x: 4 })
+           console.log("moveee",moveResult) ;
+          }
           }
         >
           Move To Down-right
         </button>
         <button
           onClick={() =>
-            currentGame?.events.emit("moveTo", { dir: "up-left", x: 8 })
+            currentGame?.events.emit("moveTo", { dir: "up-left", x: 2 })
           }
         >
           Move To Up-left
         </button>
         <button
           onClick={() =>
-            currentGame?.events.emit("moveTo", { dir: "up-right", y: 5 })
+            currentGame?.events.emit("moveTo", { dir: "up-right", y: 2 })
           }
         >
           Move To Up-right
