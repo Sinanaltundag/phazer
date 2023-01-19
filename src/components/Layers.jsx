@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Phaser from "phaser";
 import { IonPhaser } from "@ion-phaser/react";
 import { GridEngine } from "grid-engine";
-
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 // var game = new Phaser.Game(config);
 
 export default function App() {
@@ -533,6 +534,42 @@ export default function App() {
     <>
       <IonPhaser game={game} ref={gameRef} initialize={initialize} />
       {/* <button onClick={() => setGame(config)}>Change Level Back</button> */}
+      <div
+        style={{
+          // float: 'left',
+          width: 25,
+          height: 150,
+          marginBottom: 16,
+          marginLeft: 5,
+        }}
+      >
+      <Slider
+      min={0}
+      max={100}
+      marks={{
+        0: "0",
+        10: "10",
+        20: "20",
+        30: "30",
+        40: "40",
+        50: "50",
+        60: "60",
+        70: "70",
+        80: "80",
+        90: "90",
+        100: "100",
+      }}
+      value={currentRange}
+      step={null}
+      onChange={(value) => {
+        setCurrentRange(value);
+        currentGame.events.emit("setSpeed", value);
+      }}
+      defaultValue={1}
+      vertical
+      />
+    {/* <Range /> */}
+      </div>
       <button onClick={() => setInitialize(true)}>Initialize</button>
       <button onClick={destroy}>Destroy</button>
       <button

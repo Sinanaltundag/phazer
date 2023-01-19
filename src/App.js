@@ -1,5 +1,6 @@
 // import { useState } from 'react';
 import './App.css';
+// import { Phaser3GameComponent } from './components/10_phaserextend';
 // import IonEx from './components/ionexample';
 // import PhaserSimple from './components/PhaserSimple';
 // import Isometric from './components/isometric';
@@ -11,7 +12,8 @@ import './App.css';
 // import NewMapOrthogonal from './components/NewMapOrthogonal';
 // import Characters from './components/Characters';
 // import Layers from './components/Layers';
-import Straight from './components/Straight';
+// import Straight from './components/Straight';
+import Carousel from './components/carousel';
 
 function App() {
   // const [start, setStart] = useState(false);
@@ -29,7 +31,9 @@ function App() {
       {/* <NewMapOrthogonal/> */}
       {/* <Characters/> */}
       {/* <Layers/> */}
-      <Straight/>
+      {/* <Straight/> */}
+      {/* <Phaser3GameComponent/> */}
+      <Carousel/>
     </div>
   );
 }

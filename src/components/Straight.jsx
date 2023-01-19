@@ -9,17 +9,16 @@ export default function App() {
 
   const [isStopped, setIsStopped] = useState(true);
 
-
   function createPlayerAnimation(
     name,
     startFrame,
     endFrame,
     frameRate,
-    spriteSheet
+    spriteName
   ) {
     this.anims.create({
       key: name,
-      frames: this.anims.generateFrameNumbers(spriteSheet, {
+      frames: this.anims.generateFrameNumbers( spriteName , {
         start: startFrame,
         end: endFrame,
       }),
@@ -96,15 +95,12 @@ export default function App() {
       return tile?.properties?.allowed;
     });
   }
-  let moveResult = new Promise((resolve, reject) => {
-    if (isStopped) {
-      resolve("stopped");
-    } else {
-      resolve("moving");
-    }
+  let moveResult = new Promise((resolve, reject, func) => {
+    resolve = func;
   });
   let aaa = 1;
-
+  let spr;
+  let playerSprite;
   let upperText;
   // let draggable;
   // let sabit;
@@ -151,14 +147,18 @@ export default function App() {
           const layer = cloudCityTilemap.createLayer(i, "iso-tileset", 0, 0);
           layer.scale = 1;
         }
-        const playerSprite = this.add.sprite(0, 0, "player");
+        playerSprite = this.add.sprite(0, 0, "player");
         playerSprite.scale = 2;
 
-        // const playerSprite2 = this.add.sprite(0, 0, "player2");
+        spr= this.add.sprite(0, 0, "player2");
+        spr.scale = 1.5;
+        // this.playerSprite2 = this.add.sprite(0, 0, "player2");
         // playerSprite2.scale = 2;
+        // playerSprite2.visible = false;
 
         this.rock = this.add.sprite(0, 0, "rock");
         this.rock.scale = 0.5;
+        
         this.rock.setInteractive();
         this.input.setDraggable(this.rock);
         this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
@@ -179,13 +179,20 @@ export default function App() {
         this.input.on("wheel", function (pointer, gameObject, deltaX, deltaY) {
           console.log(deltaX, deltaY, pointer, gameObject);
           if ( _this.cameras.main.zoom + deltaY * 0.005 > 0.9 && _this.cameras.main.zoom + deltaY * 0.005 < 5) {
-
             _this.cameras.main.zoom += deltaY * 0.005;
+            _this.cameras.main.centerOn(110, 110);
+            // _this.cameras.main.setAlpha(0.5);
+            // _this.cameras.main.setScroll(0, 90);
+            // _this.cameras.main.setZoom(1.5);
+            console.log(_this.cameras.main.centerX); 
+            // _this.cameras.main.setFollowOffset(110, -110);
+            // _this.cameras.main.height = 500;
+            _this.cameras.main.setOrigin(0.5, 0.5);
           }
         });
-
+        
         tintTile(cloudCityTilemap, 0, 4, 0xff0000);
-
+        
         // console.log(this);
         upperText = this.add.text(-50, -30, "position", {
           fontSize: "20px",
@@ -200,8 +207,8 @@ export default function App() {
         this.cameras.main.setFollowOffset(
           -playerSprite.width,
           -playerSprite.height
-        );
-
+          );
+          
         // this.cameras.main.setZoom(0.55);
         // this.cameras.main.centerOn(70, 0);
         // this.cameras.main.setBackgroundColor("#ffffff");
@@ -211,74 +218,74 @@ export default function App() {
 
         // });
 
-        // function animations(currentSpritesheet) {
-        // createPlayerAnimation.call(
-        //   this,
-        //   "up-right",
-        //   26,
-        //   29,
-        //   10,
-        //   currentSpritesheet
-        // );
-        // createPlayerAnimation.call(
-        //   this,
-        //   "down-right",
-        //   36,
-        //   39,
-        //   10,
-        //   currentSpritesheet
-        // );
-        // createPlayerAnimation.call(
-        //   this,
-        //   "down-left",
-        //   6,
-        //   9,
-        //   5,
-        //   currentSpritesheet
-        // );
-        // createPlayerAnimation.call(
-        //   this,
-        //   "up-left",
-        //   16,
-        //   19,
-        //   5,
-        //   currentSpritesheet
-        // );
-        // }
-        // animations.call(this, "player");
-        const gridEngineConfig = {
-          characters: [
+        createPlayerAnimation.call(
+          this,
+          "up-right",
+          26,
+          29,
+          10,
+          "player",
+        );
+        
+        createPlayerAnimation.call(
+          this,
+          "down-right",
+          36,
+          39,
+          10,
+          "player",
+          );
+          createPlayerAnimation.call(
+            this,
+            "down-left",
+            6,
+            9,
+            5,
+            "player",
+            );
+            createPlayerAnimation.call(
+              this,
+              "up-left",
+              16,
+              19,
+              5,
+              "player",
+              );
+
+          
+          const gridEngineConfig = {
+            characters: [
             {
               id: "player",
               sprite: playerSprite, //! this is the sprite but if container used  it will cause error
               // offsetY: -5, //! this is the offset for the sprite but it causes a bug
               startPosition: { x: 0, y: 0 },
               offsetY: -20,
-              walkingAnimationMapping: {
-                "up-left": {
-                  leftFoot: 18,
-                  standing: 15,
-                  rightFoot: 16,
-                },
-                "up-right": {
-                  leftFoot: 26,
-                  standing: 25,
-                  rightFoot: 28,
-                },
-                "down-left": {
-                  leftFoot: 6,
-                  standing: 5,
-                  rightFoot: 8,
-                },
-                "down-right": {
-                  leftFoot: 36,
-                  standing: 35,
-                  rightFoot: 38,
-                },
-              },
-              // walkingAnimationEnabled: false,
+              // walkingAnimationMapping: {
+              //   "up-left": {
+              //     leftFoot: 18,
+              //     standing: 15,
+              //     rightFoot: 16,
+              //   },
+              //   "up-right": {
+              //     leftFoot: 26,
+              //     standing: 25,
+              //     rightFoot: 28,
+              //   },
+              //   "down-left": {
+              //     leftFoot: 6,
+              //     standing: 5,
+              //     rightFoot: 8,
+              //   },
+              //   "down-right": {
+              //     leftFoot: 36,
+              //     standing: 35,
+              //     rightFoot: 38,
+              //   },
+              // },
+              walkingAnimationEnabled: false,
               speed: 4,
-              container,
+              // container,
               // charLayer: 0, //! this is the layer for the sprite
             },
             // {
@@ -292,22 +299,24 @@ export default function App() {
           ],
         };
         this.gridEngine.create(cloudCityTilemap, gridEngineConfig);
-        // this.gridEngine.movementStarted().subscribe(({ direction }) => {
-        //   playerSprite.anims.play(direction);
-        // });
         const _this = this;
         this.detectColor = { color: "blue", range: 1 };
         this.gridEngine
-          .movementStarted()
+        .movementStarted()
           .subscribe(({ direction, character }) => {
             setPosition(true);
           });
+        playerSprite.on("animationcomplete", function () {
+          console.log("animationcomplete");
+        });
+        
+
         // function straightMove(step) {
-        //   const hedef = _this.gridEngine.getPosition("player");
-        //   // console.log("hedef",hedef);
-        //   this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
-        //     const enterTile = _this.gridEngine.getPosition("player");
-        //     console.log("enterTile",enterTile.x+1,enterTile.y+1);
+          //   const hedef = _this.gridEngine.getPosition("player");
+          //   // console.log("hedef",hedef);
+          //   this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
+            //     const enterTile = _this.gridEngine.getPosition("player");
+            //     console.log("enterTile",enterTile.x+1,enterTile.y+1);
         //     if (enterTile.x!==hedef.x+1) {
         //     _this.gridEngine.move("player", direction);
         //     }
@@ -369,18 +378,41 @@ export default function App() {
         // });
         this.game.events.on("changeChar", function (data) {
           console.log(data);
-          const dir = _this.gridEngine.getFacingDirection("player");
-          if (dir === "down-right") {
-            playerSprite.setTexture(data, 35);
-          } else if (dir === "down-left") {
-            playerSprite.setTexture(data, 5);
-          } else if (dir === "up-right") {
-            playerSprite.setTexture(data, 25);
-          } else if (dir === "up-left") {
-            playerSprite.setTexture(data, 15);
-          } else {
-            playerSprite.setTexture(data, 0);
-          }
+          // const dir = _this.gridEngine.getFacingDirection("player");
+          // playerSprite.anims.play("down-right");
+          // const player2 = _this.add.sprite(0, 0, "player2");
+          const player2 = _this.gridEngine.getSprite("player");
+          console.log(player2);
+          // const playerSprite2 = _this.add.sprite(0, 0, "player2");
+          _this.gridEngine.setSprite("player", playerSprite);
+          createPlayerAnimation.call(
+            _this,
+            "up-left",
+            16,
+            19,
+            5,
+            "player2",
+            );
+          // _this.gridEngine.removeCharacter("player");
+          // _this.gridEngine.addCharacter("player", {
+          //   sprite: playerSprite2,
+          //   startPosition: { x: 5, y: 0 },
+          //   offsetX: 50,
+          //   walkingAnimationEnabled: false,
+          //   speed: 4,
+          //   charLayer: 0,
+          // });
+          // if (dir === "down-right") {
+          //   playerSprite.setTexture(data, 35);
+          // } else if (dir === "down-left") {
+          //   playerSprite.setTexture(data, 5);
+          // } else if (dir === "up-right") {
+          //   playerSprite.setTexture(data, 25);
+          // } else if (dir === "up-left") {
+          //   playerSprite.setTexture(data, 15);
+          // } else {
+          //   playerSprite.setTexture(data, 0);
+          // }
         });
 
         this.game.events.on("moveTo", function (data) {
@@ -448,7 +480,15 @@ export default function App() {
             }
           }
         });
-
+        this.gridEngine.movementStarted().subscribe(({ direction }) => {
+          this.gridEngine.getSprite("player").anims.play(direction);
+          // spr.anims.play(direction);
+        });
+        this.gridEngine
+        .movementStopped().subscribe(({ direction, character }) => {
+          moveResult = direction;
+          
+        });
         _this.gridEngine.movementStopped().subscribe(({ direction }) => {
           setIsStopped(true);
         });
@@ -468,20 +508,25 @@ export default function App() {
 
           // });
 
-        // this.gridEngine.movementStopped().subscribe(({ direction }) => {
-        //   playerSprite.anims.stop();
-        //   playerSprite.setFrame(getStopFrame(direction));
-        // });
+        this.gridEngine.movementStopped().subscribe(({ direction }) => {
+          this.gridEngine.getSprite("player").anims.stop();
+          this.gridEngine.getSprite("player").setFrame(getStopFrame(direction));
+          // playerSprite.anims.stop();
+          // spr.anims.stop();
+          // spr.setFrame(getStopFrame(direction));
+        });
 
-        // this.gridEngine.directionChanged().subscribe(({ direction }) => {
-        //   playerSprite.setFrame(getStopFrame(direction));
-        // });
+        this.gridEngine.directionChanged().subscribe(({ direction }) => {
+          this.gridEngine.getSprite("player").setFrame(getStopFrame(direction));
+          // spr.setFrame(getStopFrame(direction));
+        });
 
         this.gridEngine.addLabels("player", ["red"]);
         // console.log(this.gridEngine.hasCharacter("Draggable"));
         const label = this.gridEngine.getLabels("player");
 
         console.log(label);
+        console.log(playerSprite);
 
         console.log(this.gridEngine.collidesWithTiles("player"));
         console.log(this.gridEngine.getCharactersAt({ x: 4, y: 0 }, "trees"));
@@ -492,7 +537,11 @@ export default function App() {
       },
 
       update: async function () {
+        const _this = this;
         const cursors = this.input.keyboard.createCursorKeys();
+        const spaceBar = this.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.SPACE
+        );
         if (cursors.left.isDown) {
           this.gridEngine.move("player", "up-left");
           // console.log(this.gridEngine.movementStarted());
@@ -507,8 +556,55 @@ export default function App() {
             // const  aaa= await this.gridEngine.movementStopped();
             // console.log(aaa);
           }
+        } else if (spaceBar.isDown) {
+          // console.log(this.gridEngine.getSprite("player"));
+        //   createPlayerAnimation.call(
+        //     _this,
+        //     "up-right",
+        //     26,
+        //     29,
+        //     10,
+        //     "player2",
+        //     );
+        //     createPlayerAnimation.call(
+        //       _this,
+        //       "up-left",
+        //       16,
+        //       19,
+        //       5,
+        //       "player2",
+        //       );
+        // createPlayerAnimation.call(
+        //   _this,
+        //   "down-left",
+        //   6,
+        //   9,
+        //   5,
+        //   "player2",
+        //   );
+          // createPlayerAnimation.call(
+          //   this,
+          //   "down-right",
+          //   36,
+          //   39,
+          //   10,
+          //   "player2",
+          //   );
+          this.anims.create({
+            key: "up-right",
+            frames: this.anims.generateFrameNumbers("player2", {
+              start: 26,
+              end: 29,
+            }),
+            frameRate: 10,
+            repeat: -1,
+          });
+            spr.setTexture("player2");
+            spr.anims.play("down-right");
+            this.gridEngine.setSprite("player", spr);
+            playerSprite.visible=false;
+            // this.gridEngine.stop("player");
         }
-        const _this = this;
         this.game.events.on("myEvent2", function (data) {
           if (data.direction === "down-left") {
             _this.gridEngine.move("player", "down-left");
@@ -561,24 +657,24 @@ export default function App() {
         //   this.gridEngine.getPosition("player").x
         // })`;
 
-        if (
-          this.gridEngine.getPosition("player").x === 0 &&
-          this.gridEngine.getPosition("player").y === 2 &&
-          this.gridEngine.getFacingDirection("player") === "down-left"
-        ) {
-          upperText.text = "Yol bitti. Dönüş yapılıyor";
-          // this.gridEngine.setSprite("player", this.newplayerSprite);
-        } else if (
-          this.gridEngine.getPosition("player").x === 0 &&
-          this.gridEngine.getPosition("player").y === 2 &&
-          this.gridEngine.getFacingDirection("player") === "up-left"
-        ) {
-          upperText.text = "Yol bitti. Dönüş yapılıyor";
-        } else {
-          upperText.text = `Position: (${
-            this.gridEngine.getPosition("player").x
-          }, ${this.gridEngine.getPosition("player").y})`;
-        }
+        // if (
+        //   this.gridEngine.getPosition("player").x === 0 &&
+        //   this.gridEngine.getPosition("player").y === 2 &&
+        //   this.gridEngine.getFacingDirection("player") === "down-left"
+        // ) {
+        //   upperText.text = "Yol bitti. Dönüş yapılıyor";
+        //   // this.gridEngine.setSprite("player", this.newplayerSprite);
+        // } else if (
+        //   this.gridEngine.getPosition("player").x === 0 &&
+        //   this.gridEngine.getPosition("player").y === 2 &&
+        //   this.gridEngine.getFacingDirection("player") === "up-left"
+        // ) {
+        //   upperText.text = "Yol bitti. Dönüş yapılıyor";
+        // } else {
+        //   upperText.text = `Position: (${
+        //     this.gridEngine.getPosition("player").x
+        //   }, ${this.gridEngine.getPosition("player").y})`;
+        // }
 
         // upperText.text = `Position: (${
         //   this.gridEngine.getPosition("player").x
